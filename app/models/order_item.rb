@@ -1,8 +1,9 @@
 # One line of an order: a pizza in a size, with extras added and standard
 # ingredients left out, times a quantity.
 #
-# Prices are live while the order is being composed and frozen when it is
-# placed, so a later menu change never alters what a customer was charged.
+# Prices are live while the order is being composed and frozen when the item is
+# saved, so a later menu change never alters what a customer was charged. Once the
+# order is placed the item is read-only like the order.
 class OrderItem < ApplicationRecord
   belongs_to :order
   belongs_to :pizza
@@ -17,24 +18,32 @@ class OrderItem < ApplicationRecord
 
   before_create :freeze_prices
 
-  # Base price of one pizza in this size.
+  # Base price of one pizza in this size: the frozen one once saved, live before.
   def base_price_cents
-    super || size.scale(pizza.base_price_cents)
+    persisted? ? super : live_base_price_cents
   end
 
   # Extras of one pizza, scaled by the size like the pizza itself.
   def extras_price_cents
-    super || size.scale(extras.sum(&:extra_price_cents))
+    persisted? ? super : live_extras_price_cents
   end
 
   def unit_price_cents = base_price_cents + extras_price_cents
   def line_price_cents = unit_price_cents * quantity
 
+  def readonly?
+    super || order&.readonly? || false
+  end
+
   private
 
+  def live_base_price_cents = size.scale(pizza.base_price_cents)
+  def live_extras_price_cents = size.scale(extras.sum(&:extra_price_cents))
+
+  # Always computed from the menu — whatever was assigned to the columns is ignored.
   def freeze_prices
-    self.base_price_cents = base_price_cents
-    self.extras_price_cents = extras_price_cents
+    self.base_price_cents = live_base_price_cents
+    self.extras_price_cents = live_extras_price_cents
   end
 
   def extras_are_priced

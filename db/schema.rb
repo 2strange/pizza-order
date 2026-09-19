@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_19_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_19_120100) do
   create_table "discount_codes", force: :cascade do |t|
     t.string "code", null: false
     t.datetime "created_at", null: false
@@ -59,10 +59,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_19_120000) do
   end
 
   create_table "orders", force: :cascade do |t|
+    t.json "adjustments"
     t.datetime "created_at", null: false
     t.string "customer_name"
     t.string "discount_code"
+    t.datetime "placed_at"
     t.json "promotion_codes", default: [], null: false
+    t.integer "total_cents"
     t.datetime "updated_at", null: false
   end
 

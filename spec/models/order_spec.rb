@@ -32,9 +32,57 @@ RSpec.describe Order do
     end
 
     it "is the same after the order is placed" do
-      golden.save!
+      golden.place!
 
       expect(Order.find(golden.id).total_cents).to eq 1629
+    end
+  end
+
+  describe "placing" do
+    let!(:placed) do
+      order(item("Salami", :small, quantity: 2), promotions: [ "ZWEIKLEINESALAMIFUEREINS" ], discount: "5PROZENTAUFALLES")
+        .tap(&:place!)
+    end
+
+    it "stamps the order and freezes the receipt" do
+      expect(placed.placed_at).to be_present
+      expect(placed.total_cents).to eq 399
+      expect(placed.adjustments).to eq [ { "label" => "ZWEIKLEINESALAMIFUEREINS", "amount_cents" => -420 },
+                                         { "label" => "5PROZENTAUFALLES", "amount_cents" => -21 } ]
+    end
+
+    it "keeps the receipt when the discount changes" do
+      DiscountCode.find_by!(code: "5PROZENTAUFALLES").update!(percent: 10)
+
+      expect(Order.find(placed.id).total_cents).to eq 399
+    end
+
+    it "keeps the receipt when the promotion is gone" do
+      Promotion.find_by!(code: "ZWEIKLEINESALAMIFUEREINS").destroy!
+      receipt = Order.find(placed.id).quote
+
+      expect(receipt.adjustments.map(&:label)).to eq %w[ZWEIKLEINESALAMIFUEREINS 5PROZENTAUFALLES]
+      expect(receipt.total_cents).to eq 399
+    end
+
+    it "makes the order read-only" do
+      expect { placed.update!(customer_name: "Someone else") }.to raise_error ActiveRecord::ReadOnlyRecord
+      expect { Order.find(placed.id).destroy! }.to raise_error ActiveRecord::ReadOnlyRecord
+    end
+
+    it "makes the items read-only" do
+      expect { placed.order_items.first.update!(quantity: 9) }.to raise_error ActiveRecord::ReadOnlyRecord
+    end
+
+    it "cannot happen twice" do
+      expect { placed.place! }.to raise_error ActiveRecord::ReadOnlyRecord
+    end
+
+    it "refuses an invalid order" do
+      invalid = order(item("Salami", :small), promotions: [ "GRATISPIZZA" ])
+
+      expect { invalid.place! }.to raise_error ActiveRecord::RecordInvalid
+      expect(invalid).not_to be_persisted
     end
   end
 
@@ -112,14 +160,12 @@ RSpec.describe Order do
 
       expect(unknown).not_to be_valid
       expect(unknown.errors.full_messages).to include "Unknown promotion code: GRATISPIZZA"
-      expect { unknown.quote }.to raise_error Order::UnknownCode, "Unknown promotion code: GRATISPIZZA"
     end
 
-    it "reject an unknown discount code by name" do
-      unknown = order(item("Salami", :small), discount: "MINUS100")
+    it "refuse to quote an invalid order" do
+      unknown = order(item("Salami", :small), promotions: [ "GRATISPIZZA" ])
 
-      expect(unknown).not_to be_valid
-      expect(unknown.errors.full_messages).to include "Unknown discount code: MINUS100"
+      expect { unknown.quote }.to raise_error ActiveRecord::RecordInvalid, /Unknown promotion code: GRATISPIZZA/
     end
   end
 

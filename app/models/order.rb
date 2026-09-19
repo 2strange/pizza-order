@@ -1,11 +1,15 @@
 # A customer's order: pizzas, the promotion codes redeemed on them and at most one
-# discount code. The price is never stored; Order#quote derives it from the items
-# and codes, so the quote for a cart in progress and the receipt of a placed order
-# come from the same place.
+# discount code. While the cart is composed, Order#quote prices it live from the
+# menu. Order#place! freezes that quote into the order (placed_at, adjustments,
+# total_cents); from then on the order is read-only and #quote serves the receipt,
+# whatever happens to the menu or the codes later.
+#
+# #quote validates first: an invalid order (unknown code, bad item) raises
+# ActiveRecord::RecordInvalid instead of pricing nonsense.
 class Order < ApplicationRecord
   UnknownCode = Class.new(StandardError)
 
-  has_many :order_items, -> { order(:id) }, dependent: :destroy
+  has_many :order_items, -> { order(:id) }, dependent: :destroy, autosave: true # autosave: item errors surface on the order
 
   validates :order_items, presence: true
   validate :codes_are_known
@@ -13,6 +17,9 @@ class Order < ApplicationRecord
   # Pricing order: line prices → promotions, in the order the codes were given,
   # each pizza in at most one deal → discount on what is left.
   def quote
+    return receipt if placed?
+
+    validate!
     promotion_adjustments = promotions.each_with_object([]) do |promotion, applied|
       adjustment = promotion.apply(self, claimed_units(applied))
       applied << adjustment if adjustment
@@ -24,7 +31,29 @@ class Order < ApplicationRecord
     Quote.new(items: order_items.to_a, adjustments: [ *promotion_adjustments, *discount_adjustment ])
   end
 
-  def total_cents = quote.total_cents
+  def total_cents
+    placed? ? super : quote.total_cents
+  end
+
+  # Turns the cart into a receipt: prices and adjustments are frozen as they are
+  # right now, and the order can no longer change.
+  def place!
+    raise ActiveRecord::ReadOnlyRecord, "Order is already placed" if placed?
+
+    final = quote
+    transaction do
+      save! # freezes the item prices first; the stamp below must not touch the items
+      update!(placed_at: Time.current,
+              adjustments: final.adjustments.map { |a| { label: a.label, amount_cents: a.amount_cents } },
+              total_cents: final.total_cents)
+    end
+  end
+
+  def placed? = placed_at.present?
+
+  def readonly?
+    super || placed_at_in_database.present?
+  end
 
   def promotions
     promotion_codes.map do |code|
@@ -39,6 +68,11 @@ class Order < ApplicationRecord
   end
 
   private
+
+  def receipt
+    frozen = adjustments.map { |a| Adjustment.new(label: a["label"], amount_cents: a["amount_cents"]) }
+    Quote.new(items: order_items.to_a, adjustments: frozen)
+  end
 
   def claimed_units(adjustments)
     adjustments.map(&:units).reduce({}) { |all, units| all.merge(units) { |_item, a, b| a + b } }

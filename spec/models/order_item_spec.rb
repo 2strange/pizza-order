@@ -34,7 +34,7 @@ RSpec.describe OrderItem do
       expect(line("Testpizza", :small).unit_price_cents).to eq 459 # 4.585
     end
 
-    it "is frozen when the order is placed" do
+    it "is frozen when the order is saved" do
       placed = line("Salami", :small, extras: [ "Oliven" ])
       placed.order.save!
       pizza("Salami").update!(base_price_cents: 900)
@@ -42,6 +42,15 @@ RSpec.describe OrderItem do
 
       expect(placed.reload.unit_price_cents).to eq 420 + 175
       expect(line("Salami", :small, extras: [ "Oliven" ]).unit_price_cents).to eq 630 + 350
+    end
+
+    it "cannot be set from outside" do
+      injected = line("Salami", :small)
+      injected.assign_attributes(base_price_cents: 1, extras_price_cents: 1)
+
+      expect(injected.unit_price_cents).to eq 420
+      injected.order.save!
+      expect(injected.reload.unit_price_cents).to eq 420
     end
   end
 
