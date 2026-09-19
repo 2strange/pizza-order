@@ -56,3 +56,27 @@ Format: **when (UTC) · decision · rejected alternative · why**.
   a string.** Rejected: an `order_promotions` join table. Why: codes are what the
   customer typed; the order resolves them to records when it prices itself, and
   there is nothing to join on but the code.
+- **09:24 · Codex review: the receipt is frozen when the order is placed.**
+  `Order#place!` stamps `placed_at` and stores the adjustments (label, amount) and
+  the total next to the already frozen item prices; `#quote` serves that receipt for
+  a placed order and prices live only for a cart. Rejected: recomputing every order
+  from the current menu and codes. Why: a discount changed from 5 to 10 % or a
+  promotion deleted after the fact must not rewrite what a customer paid — the
+  golden order stays 16.29 whatever happens to the menu.
+- **09:24 · A placed order and its items are read-only** (`readonly?` keyed on the
+  placed_at in the database, so the placing save itself still goes through).
+  Rejected: a `status` column with a state machine. Why: there is exactly one
+  transition, cart → placed, and ActiveRecord's own `ReadOnlyRecord` says everything.
+- **09:24 · Frozen item prices are always computed from pizza, size and extras;
+  assigned values are overwritten on save.** Rejected: trusting a pre-filled column
+  (`super || live`). Why: the columns are a snapshot, not an input — a request must
+  not be able to set its own price.
+- **09:24 · `Order#quote` validates first and raises `ActiveRecord::RecordInvalid`.**
+  Rejected: documenting "call `valid?` before `quote`" and letting an invalid order
+  raise whatever it hits (`UnknownCode`, `NoMethodError`). Why: one exception type
+  with the full error list is what a controller wants to map to 422; a placed order
+  skips validation, since its codes may be gone. `Order::UnknownCode` stays internal.
+- **09:24 · `quantity` is capped at `OrderItem::MAX_QUANTITY` (50) and
+  `promotion_codes` must be a list of strings (nil means none).** Rejected: leaving
+  both to the UI. Why: a JSON column accepts any shape; the model, not the client,
+  decides what an order is.
