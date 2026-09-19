@@ -5,6 +5,7 @@ import { useCart } from '../composables/useCart.js'
 import Cart from './Cart.vue'
 import MenuBoard from './MenuBoard.vue'
 import OrderConfirmation from './OrderConfirmation.vue'
+import PizzaArt from './PizzaArt.vue'
 import PizzaConfigurator from './PizzaConfigurator.vue'
 import ThemeToggle from './ThemeToggle.vue'
 
@@ -31,7 +32,13 @@ function add(item) {
 <template>
   <main class="app">
     <header class="app__header">
-      <h1 class="app__title">Pizza Order</h1>
+      <div class="app__brand">
+        <PizzaArt name="Margherita" class="app__logo" />
+        <div>
+          <h1 class="app__title">Pizza Order</h1>
+          <p class="app__tagline">Aus dem Steinofen, direkt auf den Bildschirm.</p>
+        </div>
+      </div>
       <ThemeToggle />
     </header>
 
