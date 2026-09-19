@@ -12,7 +12,11 @@ class Order < ApplicationRecord
   has_many :order_items, -> { order(:id) }, dependent: :destroy, autosave: true # autosave: item errors surface on the order
 
   validates :order_items, presence: true
-  validate :codes_are_known
+  validate :promotion_codes_are_a_list, :codes_are_known
+
+  def promotion_codes=(codes)
+    super(codes.nil? ? [] : codes)
+  end
 
   # Pricing order: line prices → promotions, in the order the codes were given,
   # each pizza in at most one deal → discount on what is left.
@@ -78,7 +82,15 @@ class Order < ApplicationRecord
     adjustments.map(&:units).reduce({}) { |all, units| all.merge(units) { |_item, a, b| a + b } }
   end
 
+  def promotion_codes_are_a_list
+    return if promotion_codes.is_a?(Array) && promotion_codes.all?(String)
+
+    errors.add(:promotion_codes, "must be a list of codes")
+  end
+
   def codes_are_known
+    return if errors.include?(:promotion_codes)
+
     promotions
     discount
   rescue UnknownCode => e

@@ -55,6 +55,11 @@ RSpec.describe OrderItem do
   end
 
   describe "validation" do
+    it "caps the quantity" do
+      expect(line("Salami", :small, quantity: OrderItem::MAX_QUANTITY)).to be_valid
+      expect(line("Salami", :small, quantity: OrderItem::MAX_QUANTITY + 1)).not_to be_valid
+    end
+
     it "allows only priced ingredients as extras" do
       with_basil = line("Salami", :small, extras: [ "Basilikum" ])
 

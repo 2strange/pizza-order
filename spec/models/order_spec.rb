@@ -167,6 +167,26 @@ RSpec.describe Order do
 
       expect { unknown.quote }.to raise_error ActiveRecord::RecordInvalid, /Unknown promotion code: GRATISPIZZA/
     end
+
+    it "take promotion codes as a list of strings, nil meaning none" do
+      expect(order(item("Salami", :small), promotions: nil)).to be_valid
+      expect(order(item("Salami", :small), promotions: "ZWEIKLEINESALAMIFUEREINS")).not_to be_valid
+      expect(order(item("Salami", :small), promotions: [ 1 ])).not_to be_valid
+    end
+
+    it "name the problem with a promotion code list" do
+      bad = order(item("Salami", :small), promotions: { code: "X" })
+
+      expect(bad).not_to be_valid
+      expect(bad.errors.full_messages).to eq [ "Promotion codes must be a list of codes" ]
+    end
+
+    it "reject an unknown discount code by name" do
+      unknown = order(item("Salami", :small), discount: "MINUS100")
+
+      expect(unknown).not_to be_valid
+      expect(unknown.errors.full_messages).to include "Unknown discount code: MINUS100"
+    end
   end
 
   it "needs at least one pizza" do

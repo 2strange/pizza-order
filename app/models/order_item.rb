@@ -5,6 +5,8 @@
 # saved, so a later menu change never alters what a customer was charged. Once the
 # order is placed the item is read-only like the order.
 class OrderItem < ApplicationRecord
+  MAX_QUANTITY = 50
+
   belongs_to :order
   belongs_to :pizza
   has_and_belongs_to_many :extras, class_name: "Ingredient", join_table: :order_item_extras
@@ -13,7 +15,7 @@ class OrderItem < ApplicationRecord
   attribute :size, Size::Type.new
 
   validates :size, presence: { message: "is not a known size" }
-  validates :quantity, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
+  validates :quantity, numericality: { only_integer: true, in: 1..MAX_QUANTITY }
   validate :extras_are_priced, :removed_ingredients_are_standard
 
   before_create :freeze_prices
