@@ -5,7 +5,7 @@
 class Order < ApplicationRecord
   UnknownCode = Class.new(StandardError)
 
-  has_many :order_items, dependent: :destroy
+  has_many :order_items, -> { order(:id) }, dependent: :destroy
 
   validates :order_items, presence: true
   validate :codes_are_known
