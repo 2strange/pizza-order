@@ -1,0 +1,18 @@
+{
+  "size_multipliers": { "Klein": 0.7, "Mittel": 1.0, "Groß": 1.3 },
+  "pizzas": {
+    "Margherita":       { "price": 5.0, "ingredients": ["Tomatensauce", "Käse", "Basilikum"] },
+    "Salami":           { "price": 6.0, "ingredients": ["Tomatensauce", "Käse", "Salami"] },
+    "Funghi":           { "price": 6.5, "ingredients": ["Tomatensauce", "Käse", "Champignons"] },
+    "Prosciutto":       { "price": 7.0, "ingredients": ["Tomatensauce", "Käse", "Schinken"] },
+    "Tonno":            { "price": 8.0, "ingredients": ["Tomatensauce", "Käse", "Thunfisch", "Zwiebeln"] },
+    "Quattro Formaggi": { "price": 8.5, "ingredients": ["Tomatensauce", "Käse", "Gorgonzola", "Parmesan"] }
+  },
+  "ingredients": { "Zwiebeln": 1.0, "Käse": 2.0, "Oliven": 2.5 },
+  "promotions": {
+    "ZWEIKLEINESALAMIFUEREINS": { "target": "Salami", "target_size": "Klein", "from": 2, "to": 1 }
+  },
+  "discounts": {
+    "5PROZENTAUFALLES": { "deduction_in_percent": 5 }
+  }
+}
