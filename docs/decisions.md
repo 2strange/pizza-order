@@ -122,12 +122,11 @@ Format: **when (UTC) · decision · rejected alternative · why**.
   leaving it. Why: the tree is byte-identical either way; the history should read as it
   was meant. Lesson: merge the SHAs an agent reports, never the branch it is still on.
 - **13:44 · Themes stay pure token overrides; where a theme needs a different
-  shape, the shape is a token too** (`--radius-pill`, `--card-border`, `--prompt`,
-  `--pizza-stroke`, `--bg-pattern`). Rejected: theme-scoped component selectors
+  shape, the shape is a token too** (`--radius-pill`, `--prompt`, `--pizza-stroke`,
+  `--bg-pattern`). Rejected: theme-scoped component selectors
   (`html[data-theme="nerd"] .cart { … }`). Why: one place per theme, no theme
   knowledge below the token block; the nerd look (square corners, a `> ` before
-  headings, wireframe pizzas) and the human look (borderless cards on a shadow)
-  are each a block of values, not a second stylesheet.
+  headings, wireframe pizzas) is a block of values, not a second stylesheet.
 - **13:44 · One SVG per pizza, drawn from its recipe, every ingredient its own
   token.** Rejected: photos; one generic pizza tinted per name; an icon font.
   Why: the menu has six pizzas and the art is the product's face — the mushrooms
@@ -135,8 +134,8 @@ Format: **when (UTC) · decision · rejected alternative · why**.
   recipe has them (olives are an extra). Nerd draws the same shapes as wireframes
   by setting the fills to the surface colour and `--pizza-stroke` to the text
   colour, so a new pizza needs no theme work.
-- **13:44 · The theme switch is a segmented group of four buttons, not a
-  dropdown.** Rejected: `<select>`; a popover menu. Why: four options fit one row,
+- **13:44 · The theme switch is a segmented group of buttons, not a
+  dropdown.** Rejected: `<select>`; a popover menu. Why: three options fit one row,
   every option is visible and one tap away, `aria-pressed` says which is on, and
   the e2e test's `cy.contains('button', 'Dunkel')` keeps working. Shift-click on
   any option turns on the Commodore easter egg (`c64`); it is not listed, so it
@@ -149,3 +148,9 @@ Format: **when (UTC) · decision · rejected alternative · why**.
   `OrderConfirmation.vue`, coloured by `--oven-*` tokens.** Rejected: a component
   of its own; a raster image. Why: it is used once, has no props, and the same
   token rules let every theme keep its own oven.
+- **15:10 · Three themes: light, dark, nerd — the "human" theme (rounded sans,
+  borderless cards on a shadow) is dropped.** Rejected: keeping it as a fourth
+  option. Why: next to the trattoria light theme it was a second warm light look
+  with no job of its own; a soft variant earns its place beside a terminal look,
+  not beside a pizzeria. A remembered `human` falls back to the system
+  preference. The `c64` easter egg stays.

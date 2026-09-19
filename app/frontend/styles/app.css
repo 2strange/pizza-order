@@ -13,11 +13,9 @@
     repeating-linear-gradient(0deg, rgba(185, 58, 33, 0.05) 0 12px, transparent 12px 36px);
   --surface: #fffaf0;
   --surface-raised: #f8edd8;
-  --input-bg: var(--surface);
   --fg: #2c1f16;
   --dim: #7a6350;
   --line: rgba(44, 31, 22, 0.16);
-  --card-border: var(--line);
   --shadow: 0 1px 2px rgba(44, 31, 22, 0.08);
 
   /* brand */
@@ -193,35 +191,6 @@ html[data-theme="nerd"] {
   color-scheme: dark;
 }
 
-/* Human: the soft version — rounded sans, peachy paper, cards that float on a
-   shadow instead of sitting in a border. */
-html[data-theme="human"] {
-  --bg: #fbf3ea;
-  --bg-pattern: none;
-  --surface: #ffffff;
-  --surface-raised: #fdf1e6;
-  --input-bg: var(--surface-raised);
-  --fg: #3b2a22;
-  --dim: #8a6f5f;
-  --line: rgba(120, 70, 40, 0.14);
-  --card-border: transparent;
-  --shadow: 0 12px 32px -14px rgba(120, 70, 40, 0.35), 0 1px 3px rgba(120, 70, 40, 0.08);
-
-  --accent: #c65d3b;
-  --accent-strong: #a94a2b;
-  --accent-fg: #ffffff;
-  --accent-soft: rgba(198, 93, 59, 0.12);
-  --success: #3a7d44;
-  --success-soft: rgba(58, 125, 68, 0.1);
-
-  --radius: 22px;
-  --radius-small: 12px;
-  --space: 18px;
-
-  --font: ui-rounded, "SF Pro Rounded", "Nunito", "Avenir Next", "URW Gothic", "Segoe UI", system-ui, sans-serif;
-  --font-display: var(--font);
-}
-
 /* Easter egg: shift-click any theme button. Commodore blue, 8-bit type. */
 html[data-theme="c64"] {
   --bg: #352879;
@@ -301,7 +270,7 @@ input[type="text"], input[type="number"] {
   padding: 10px 12px;
   border: 1px solid var(--line);
   border-radius: var(--radius-small);
-  background: var(--input-bg);
+  background: var(--surface);
   box-shadow: inset 0 1px 2px rgba(44, 31, 22, 0.06);
 }
 
@@ -371,7 +340,7 @@ input:focus-visible, button:focus-visible {
 .theme-toggle {
   display: inline-flex;
   padding: 3px;
-  border: 1px solid var(--card-border);
+  border: 1px solid var(--line);
   border-radius: var(--radius-pill);
   background: var(--surface);
   box-shadow: var(--shadow);
@@ -401,7 +370,7 @@ input:focus-visible, button:focus-visible {
 .menu { list-style: none; display: grid; gap: 10px; }
 
 .menu__item {
-  border: 1px solid var(--card-border);
+  border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--surface);
   box-shadow: var(--shadow);
@@ -503,7 +472,7 @@ svg .pizza-art__onion { fill: none; stroke: var(--pizza-onion); stroke-width: 2;
 .cart {
   margin-top: var(--space-large);
   padding: var(--space);
-  border: 1px solid var(--card-border);
+  border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--surface);
   box-shadow: var(--shadow);
