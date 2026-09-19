@@ -56,6 +56,21 @@ Format: **when (UTC) · decision · rejected alternative · why**.
   a string.** Rejected: an `order_promotions` join table. Why: codes are what the
   customer typed; the order resolves them to records when it prices itself, and
   there is nothing to join on but the code.
+- **09:19 · The JSON API renders through two small presenter classes
+  (`QuotePresenter`, `OrderPresenter`) and plain `render json:`.** Rejected: jbuilder
+  views; a serializer gem; `Quote#as_json` on the domain object. Why: the wire shape
+  (names instead of records, receipt parts per line) is a concern of the interface,
+  not of the value object that prices the order; two 30-line classes need no gem.
+- **09:19 · `OrderBuilder` assembles an `Order` from a request body; quotes and orders
+  share it.** Rejected: `Order.from_params` on the model; building in each controller.
+  Why: the model should not know what a request looks like, and a quote is just an
+  order that is priced but not saved — the same builder guarantees that both endpoints
+  price exactly the same thing. Ids that point nowhere are rejected with 422, never
+  silently dropped: an extra the customer asked for must not vanish from the price.
+- **09:19 · Item errors surface on the order (`has_many …, autosave: true`).** Rejected:
+  collecting item errors by hand in the controller. Why: Rails already copies nested
+  errors onto the parent for autosaved associations — "Order items size is not a known
+  size" instead of "Order items is invalid" — and nothing else changes for a new order.
 - **09:24 · Codex review: the receipt is frozen when the order is placed.**
   `Order#place!` stamps `placed_at` and stores the adjustments (label, amount) and
   the total next to the already frozen item prices; `#quote` serves that receipt for

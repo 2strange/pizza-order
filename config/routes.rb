@@ -11,4 +11,9 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "pages#home"
+
+  # JSON API for the Vue frontend
+  get "menu", to: "menu#show"
+  resources :quotes, only: :create
+  resources :orders, only: %i[ create show ]
 end
