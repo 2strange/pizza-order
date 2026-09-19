@@ -25,3 +25,16 @@ menu["pizzas"].each do |name, recipe|
   pizza.update!(base_price_cents: cents[recipe["price"]])
   pizza.ingredients = recipe["ingredients"].map { |ingredient| ingredients[ingredient] }
 end
+
+menu["promotions"].each do |code, deal|
+  Promotion.find_or_initialize_by(code: code).update!(
+    pizza: Pizza.find_by!(name: deal["target"]),
+    size: Size.all.find { |s| s.label == deal["target_size"] },
+    from_quantity: deal["from"],
+    to_quantity: deal["to"]
+  )
+end
+
+menu["discounts"].each do |code, discount|
+  DiscountCode.find_or_initialize_by(code: code).update!(percent: discount["deduction_in_percent"])
+end

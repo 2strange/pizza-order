@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_19_110000) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_19_110200) do
+  create_table "discount_codes", force: :cascade do |t|
+    t.string "code", null: false
+    t.datetime "created_at", null: false
+    t.integer "percent", null: false
+    t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_discount_codes_on_code", unique: true
+  end
+
   create_table "ingredients", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "extra_price_cents"
@@ -25,6 +33,39 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_19_110000) do
     t.index ["pizza_id", "ingredient_id"], name: "index_ingredients_pizzas_on_pizza_id_and_ingredient_id", unique: true
   end
 
+  create_table "order_item_extras", id: false, force: :cascade do |t|
+    t.integer "ingredient_id", null: false
+    t.integer "order_item_id", null: false
+    t.index ["order_item_id", "ingredient_id"], name: "index_order_item_extras_on_order_item_id_and_ingredient_id", unique: true
+  end
+
+  create_table "order_item_removals", id: false, force: :cascade do |t|
+    t.integer "ingredient_id", null: false
+    t.integer "order_item_id", null: false
+    t.index ["order_item_id", "ingredient_id"], name: "index_order_item_removals_on_order_item_id_and_ingredient_id", unique: true
+  end
+
+  create_table "order_items", force: :cascade do |t|
+    t.integer "base_price_cents", null: false
+    t.datetime "created_at", null: false
+    t.integer "extras_price_cents", null: false
+    t.integer "order_id", null: false
+    t.integer "pizza_id", null: false
+    t.integer "quantity", default: 1, null: false
+    t.string "size", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_order_items_on_order_id"
+    t.index ["pizza_id"], name: "index_order_items_on_pizza_id"
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "customer_name"
+    t.string "discount_code"
+    t.json "promotion_codes", default: [], null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "pizzas", force: :cascade do |t|
     t.integer "base_price_cents", null: false
     t.datetime "created_at", null: false
@@ -32,4 +73,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_19_110000) do
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_pizzas_on_name", unique: true
   end
+
+  create_table "promotions", force: :cascade do |t|
+    t.string "code", null: false
+    t.datetime "created_at", null: false
+    t.integer "from_quantity", null: false
+    t.integer "pizza_id", null: false
+    t.string "size", null: false
+    t.integer "to_quantity", null: false
+    t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_promotions_on_code", unique: true
+    t.index ["pizza_id"], name: "index_promotions_on_pizza_id"
+  end
+
+  add_foreign_key "order_items", "orders"
+  add_foreign_key "order_items", "pizzas"
+  add_foreign_key "promotions", "pizzas"
 end
