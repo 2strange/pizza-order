@@ -1,22 +1,284 @@
-/* Design tokens live here — themes override them, components only consume them. */
+/* ---------------------------------------------------------------------------
+   Design tokens. Themes override them, components only consume them.
+   A new palette or a new theme changes this block and nothing below it.
+   --------------------------------------------------------------------------- */
 :root {
+  /* surfaces + text */
   --bg: #f6f4ef;
+  --surface: #fffdf9;
+  --surface-raised: #fbf7f0;
   --fg: #2b2f37;
   --dim: #6f757e;
+  --line: rgba(43, 47, 55, 0.14);
+
+  /* brand */
   --accent: #c2603f;
-  --line: rgba(0, 0, 0, 0.12);
+  --accent-fg: #ffffff;
+  --accent-soft: rgba(194, 96, 63, 0.12);
+  --danger: #b3261e;
+  --success: #3d7a4a;
+
+  /* placeholder pizza artwork (see PizzaArt.vue) */
+  --pizza-crust: #e0b878;
+  --pizza-sauce: #d0553a;
+  --pizza-topping: #f2e3b8;
+
+  /* shape + rhythm */
+  --radius: 10px;
+  --radius-small: 6px;
+  --space: 16px;
+  --space-small: 8px;
+  --space-large: 32px;
+  --measure: 640px;
+
+  /* type */
   --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --text: 16px;
+  --text-small: 14px;
+  --text-large: 20px;
+  --text-title: 28px;
+
+  color-scheme: light;
 }
 
+html[data-theme="dark"] {
+  --bg: #1d1b19;
+  --surface: #26231f;
+  --surface-raised: #2f2b26;
+  --fg: #efe9df;
+  --dim: #a59d91;
+  --line: rgba(239, 233, 223, 0.16);
+
+  --accent: #e08863;
+  --accent-fg: #1d1b19;
+  --accent-soft: rgba(224, 136, 99, 0.18);
+  --danger: #f28b82;
+  --success: #8bc59a;
+
+  --pizza-crust: #b8925a;
+  --pizza-sauce: #b04a34;
+  --pizza-topping: #d9c79a;
+
+  color-scheme: dark;
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+   --------------------------------------------------------------------------- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
   background: var(--bg);
   color: var(--fg);
   font-family: var(--font);
+  font-size: var(--text);
   line-height: 1.5;
-  padding: 32px 16px;
+  padding: var(--space) var(--space) var(--space-large);
 }
 
-.app { max-width: 860px; margin: 0 auto; }
+button, input { font: inherit; color: inherit; }
+
+input[type="text"], input[type="number"] {
+  width: 100%;
+  padding: var(--space-small) 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-small);
+  background: var(--surface);
+}
+
+input:focus-visible, button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.button {
+  padding: var(--space-small) var(--space);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-small);
+  background: var(--surface-raised);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.button--primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-fg);
+  font-weight: 600;
+}
+
+.button:disabled { opacity: 0.5; cursor: default; }
+
+/* ---------------------------------------------------------------------------
+   App shell
+   --------------------------------------------------------------------------- */
+.app { max-width: var(--measure); margin: 0 auto; }
+
+.app__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space);
+  margin-bottom: var(--space-large);
+}
+
+.app__title { font-size: var(--text-title); line-height: 1.2; }
 .app__hint { color: var(--dim); }
+
+.theme-toggle {
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--dim);
+  font-size: var(--text-small);
+  cursor: pointer;
+}
+
+/* ---------------------------------------------------------------------------
+   Menu
+   --------------------------------------------------------------------------- */
+.menu { list-style: none; display: grid; gap: var(--space-small); }
+
+.menu__item {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.menu__item.is-selected { border-color: var(--accent); }
+
+.pizza {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px var(--space);
+  border: 0;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.pizza:hover { background: var(--surface-raised); }
+
+.pizza__art { flex: 0 0 48px; width: 48px; height: 48px; }
+.pizza__text { flex: 1; display: grid; }
+.pizza__name { font-weight: 600; }
+.pizza__recipe { color: var(--dim); font-size: var(--text-small); }
+.pizza__price { font-variant-numeric: tabular-nums; }
+
+.pizza-art__crust { fill: var(--pizza-crust); }
+.pizza-art__sauce { fill: var(--pizza-sauce); }
+.pizza-art__topping { fill: var(--pizza-topping); }
+
+/* ---------------------------------------------------------------------------
+   Configurator
+   --------------------------------------------------------------------------- */
+.configurator {
+  display: grid;
+  gap: var(--space);
+  padding: var(--space);
+  border-top: 1px solid var(--line);
+  background: var(--surface-raised);
+}
+
+.configurator__group { border: 0; display: grid; gap: 4px; }
+.configurator__legend { font-weight: 600; margin-bottom: 4px; }
+
+.choice { display: flex; align-items: center; gap: var(--space-small); cursor: pointer; }
+.choice__label { flex: 1; }
+.choice__note { color: var(--dim); font-size: var(--text-small); font-variant-numeric: tabular-nums; }
+
+.configurator__actions { display: flex; align-items: end; gap: var(--space); }
+.configurator__quantity { display: grid; gap: 4px; flex: 0 0 96px; }
+
+/* ---------------------------------------------------------------------------
+   Cart + receipt
+   --------------------------------------------------------------------------- */
+.cart {
+  margin-top: var(--space-large);
+  padding: var(--space);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  display: grid;
+  gap: var(--space);
+}
+
+.cart__title { font-size: var(--text-large); }
+.cart__empty { color: var(--dim); }
+.cart__codes { display: grid; gap: var(--space); }
+.cart__checkout { display: grid; gap: var(--space-small); padding-top: var(--space); border-top: 1px solid var(--line); }
+.cart__name { display: grid; gap: 4px; }
+.cart__error { color: var(--danger); font-size: var(--text-small); }
+
+.breakdown { display: grid; gap: var(--space); transition: opacity 150ms; }
+.breakdown.is-pending { opacity: 0.6; }
+
+.breakdown__lines { list-style: none; display: grid; gap: var(--space-small); }
+.breakdown__line { display: grid; gap: 2px; }
+.breakdown__head { display: flex; align-items: center; gap: var(--space-small); }
+.breakdown__title { flex: 1; font-weight: 600; }
+.breakdown__amount { font-variant-numeric: tabular-nums; }
+.breakdown__detail, .breakdown__removed { color: var(--dim); font-size: var(--text-small); }
+.breakdown__removed { color: var(--accent); }
+
+.breakdown__remove {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: none;
+  color: var(--dim);
+  line-height: 1;
+  cursor: pointer;
+}
+
+.breakdown__remove:hover { color: var(--danger); border-color: var(--danger); }
+
+.breakdown__sums { display: grid; gap: 4px; padding-top: var(--space-small); border-top: 1px solid var(--line); }
+.breakdown__sum { display: flex; justify-content: space-between; gap: var(--space); }
+.breakdown__sum dd { font-variant-numeric: tabular-nums; }
+.breakdown__sum--adjustment { color: var(--success); }
+.breakdown__sum--adjustment dt { font-family: var(--font-mono); font-size: var(--text-small); }
+.breakdown__sum--total { font-weight: 700; font-size: var(--text-large); margin-top: 4px; }
+
+/* codes */
+.code { display: grid; gap: var(--space-small); }
+.code__form { display: flex; align-items: end; gap: var(--space-small); }
+.code__label { flex: 1; display: grid; gap: 4px; }
+.code__label input { font-family: var(--font-mono); text-transform: uppercase; }
+.code__applied { list-style: none; display: flex; flex-wrap: wrap; gap: var(--space-small); }
+.code__error { color: var(--danger); font-size: var(--text-small); }
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 6px 2px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+}
+
+.chip__remove { border: 0; background: none; color: var(--dim); cursor: pointer; line-height: 1; }
+.chip__remove:hover { color: var(--danger); }
+
+/* ---------------------------------------------------------------------------
+   Confirmation
+   --------------------------------------------------------------------------- */
+.confirmation {
+  display: grid;
+  gap: var(--space);
+  padding: var(--space);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.confirmation__title { font-size: var(--text-large); }
+.confirmation__number { font-family: var(--font-mono); }

@@ -95,3 +95,25 @@ Format: **when (UTC) · decision · rejected alternative · why**.
   `promotion_codes` must be a list of strings (nil means none).** Rejected: leaving
   both to the UI. Why: a JSON column accepts any shape; the model, not the client,
   decides what an order is.
+- **11:30 · The cart shows only what the server quoted.** Rejected: rendering cart
+  lines from the client's own item list with names looked up in the menu. Why: one
+  source of truth for the receipt — the quote carries names, parts and sums, so the
+  cart in progress and the confirmation are the same `PriceBreakdown` over the same
+  JSON, and no price or label is ever assembled in the browser.
+- **11:30 · A code the server refuses is dropped again right away.** Rejected: keeping
+  the bad code and marking the quote stale. Why: the quote on screen must always be
+  one the server stands behind; the message stays visible at the field, the cart
+  keeps the last valid price, nothing has to be recomputed.
+- **11:30 · Themes are token overrides on `html[data-theme]`, chosen at start from the
+  system preference and remembered in `localStorage`.** Rejected: a
+  `prefers-color-scheme` media query in CSS as well. Why: the dark palette would
+  have to be written twice; one attribute set by three lines of script covers both
+  the system default and the toggle.
+- **11:30 · `bin/e2e` seeds explicitly.** Rejected: relying on `db:prepare`. Why:
+  `db:prepare` seeds only a database it has just created; a test database left by
+  RSpec is empty (transactional fixtures roll the seeds back), and Cypress needs
+  the menu. `db:seed` is idempotent, so running it twice costs nothing.
+- **11:30 · Amounts are formatted by `Intl.NumberFormat("de-DE")` — "16,29 €".**
+  Rejected: hand-rolled formatting; "€ 16,29". Why: the platform knows the German
+  convention (symbol after the number, non-breaking space); the division by 100
+  happens after every price has been decided by the server.
