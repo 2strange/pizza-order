@@ -1,64 +1,279 @@
 /* ---------------------------------------------------------------------------
    Design tokens. Themes override them, components only consume them.
    A new palette or a new theme changes this block and nothing below it.
+
+   The default is the light "trattoria" look: a parchment-coloured table,
+   cream cards, oven-dark text, tomato as the one accent, basil for good news.
    --------------------------------------------------------------------------- */
 :root {
   /* surfaces + text */
-  --bg: #f6f4ef;
-  --surface: #fffdf9;
-  --surface-raised: #fbf7f0;
-  --fg: #2b2f37;
-  --dim: #6f757e;
-  --line: rgba(43, 47, 55, 0.14);
+  --bg: #f1e6d2;
+  --bg-pattern:
+    repeating-linear-gradient(90deg, rgba(185, 58, 33, 0.05) 0 12px, transparent 12px 36px),
+    repeating-linear-gradient(0deg, rgba(185, 58, 33, 0.05) 0 12px, transparent 12px 36px);
+  --surface: #fffaf0;
+  --surface-raised: #f8edd8;
+  --input-bg: var(--surface);
+  --fg: #2c1f16;
+  --dim: #7a6350;
+  --line: rgba(44, 31, 22, 0.16);
+  --card-border: var(--line);
+  --shadow: 0 1px 2px rgba(44, 31, 22, 0.08);
 
   /* brand */
-  --accent: #c2603f;
-  --accent-fg: #ffffff;
-  --accent-soft: rgba(194, 96, 63, 0.12);
-  --danger: #b3261e;
-  --success: #3d7a4a;
+  --accent: #b93a21;
+  --accent-strong: #9c2e18;
+  --accent-fg: #fffaf0;
+  --accent-soft: rgba(185, 58, 33, 0.12);
+  --danger: #a8231a;
+  --success: #2f6b2a;
+  --success-soft: rgba(47, 107, 42, 0.1);
 
-  /* placeholder pizza artwork (see PizzaArt.vue) */
-  --pizza-crust: #e0b878;
-  --pizza-sauce: #d0553a;
-  --pizza-topping: #f2e3b8;
+  /* pizza artwork (see PizzaArt.vue) — every ingredient has its own colour */
+  --pizza-crust: #e2b467;
+  --pizza-crust-edge: #c48b3c;
+  --pizza-sauce: #d0432c;
+  --pizza-cheese: #f6d35c;
+  --pizza-topping: #fff6e0; /* mozzarella */
+  --pizza-basil: #4d8b3a;
+  --pizza-basil-vein: #7fb86a;
+  --pizza-salami: #b4342c;
+  --pizza-salami-dot: #e79a8a;
+  --pizza-mushroom: #f8f1e4;
+  --pizza-mushroom-cap: #8b5a30;
+  --pizza-ham: #e69b96;
+  --pizza-ham-fat: #f9d9d5;
+  --pizza-tuna: #c48b70;
+  --pizza-onion: #cdb6e6;
+  --pizza-gorgonzola: #eef0da;
+  --pizza-blue: #7fa48e;
+  --pizza-parmesan: #f2e19a;
+  --pizza-olive: #3d3530;
+  --pizza-stroke: none;
+  --pizza-stroke-width: 0;
+
+  /* oven illustration (see OrderConfirmation.vue) */
+  --oven-body: #5b3a2c;
+  --oven-brick: #7d4c38;
+  --oven-mouth: #24140f;
+  --oven-glow: #ff9a3c;
+  --oven-floor: #a88962;
 
   /* shape + rhythm */
-  --radius: 10px;
-  --radius-small: 6px;
+  --radius: 14px;
+  --radius-small: 8px;
+  --radius-pill: 999px;
   --space: 16px;
   --space-small: 8px;
   --space-large: 32px;
-  --measure: 640px;
+  --measure: 680px;
 
   /* type */
   --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --font-display: ui-rounded, "SF Pro Rounded", "Arial Rounded MT Bold", "Nunito", "URW Gothic", "Avenir Next", system-ui, sans-serif;
+  --font-mono: ui-monospace, "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
   --text: 16px;
   --text-small: 14px;
   --text-large: 20px;
-  --text-title: 28px;
+  --text-title: 30px;
+  --prompt: ""; /* the nerd theme puts a shell prompt in front of headings */
 
   color-scheme: light;
 }
 
+/* Dark: the pizzeria at night. Real dark, with the tomato lifted so it still
+   reads on the dark wood. */
 html[data-theme="dark"] {
-  --bg: #1d1b19;
-  --surface: #26231f;
-  --surface-raised: #2f2b26;
-  --fg: #efe9df;
-  --dim: #a59d91;
-  --line: rgba(239, 233, 223, 0.16);
+  --bg: #16110d;
+  --bg-pattern: none;
+  --surface: #221a14;
+  --surface-raised: #2c2119;
+  --fg: #f3e7d3;
+  --dim: #b39d85;
+  --line: rgba(243, 231, 211, 0.16);
+  --shadow: none;
 
-  --accent: #e08863;
-  --accent-fg: #1d1b19;
-  --accent-soft: rgba(224, 136, 99, 0.18);
-  --danger: #f28b82;
-  --success: #8bc59a;
+  --accent: #ef6a4e;
+  --accent-strong: #ff8a6e;
+  --accent-fg: #16110d;
+  --accent-soft: rgba(239, 106, 78, 0.18);
+  --danger: #ff8a80;
+  --success: #8fcf7f;
+  --success-soft: rgba(143, 207, 127, 0.12);
 
-  --pizza-crust: #b8925a;
-  --pizza-sauce: #b04a34;
-  --pizza-topping: #d9c79a;
+  --pizza-crust: #c9974e;
+  --pizza-crust-edge: #9a6a2c;
+  --pizza-sauce: #b5392a;
+  --pizza-cheese: #e5bf4c;
+  --pizza-topping: #f5e9cf;
+  --pizza-basil: #5a9a45;
+  --pizza-basil-vein: #8cc477;
+  --pizza-salami: #a52f28;
+  --pizza-salami-dot: #d98a7a;
+  --pizza-mushroom: #dcc59f;
+  --pizza-mushroom-cap: #8e6238;
+  --pizza-ham: #d48b86;
+  --pizza-ham-fat: #efcac6;
+  --pizza-tuna: #b07a60;
+  --pizza-onion: #b39ed1;
+  --pizza-gorgonzola: #dfe2c4;
+  --pizza-blue: #6f8f7c;
+  --pizza-parmesan: #ddcc88;
+  --pizza-olive: #2a2420;
+
+  --oven-body: #3e271d;
+  --oven-brick: #5c3627;
+  --oven-mouth: #0e0805;
+  --oven-glow: #ff8a2a;
+  --oven-floor: #7c6446;
+
+  color-scheme: dark;
+}
+
+/* Nerd: monospace, phosphor green, hard corners, a prompt before every heading,
+   and the pizzas drawn as wireframes. */
+html[data-theme="nerd"] {
+  --bg: #0b0f0c;
+  --bg-pattern: repeating-linear-gradient(0deg, transparent 0 3px, rgba(0, 0, 0, 0.35) 3px 4px);
+  --surface: #0f1611;
+  --surface-raised: #142017;
+  --fg: #b8f09a;
+  --dim: #7fb56a;
+  --line: #2e5a34;
+  --shadow: none;
+
+  --accent: #ffb454;
+  --accent-strong: #ffc978;
+  --accent-fg: #0b0f0c;
+  --accent-soft: rgba(255, 180, 84, 0.16);
+  --danger: #ff7b72;
+  --success: #6ee7a0;
+  --success-soft: rgba(110, 231, 160, 0.12);
+
+  --pizza-crust: #0f1611;
+  --pizza-crust-edge: #142017;
+  --pizza-sauce: #142017;
+  --pizza-cheese: #0f1611;
+  --pizza-topping: #142017;
+  --pizza-basil: #142017;
+  --pizza-basil-vein: #0f1611;
+  --pizza-salami: #142017;
+  --pizza-salami-dot: #0f1611;
+  --pizza-mushroom: #0f1611;
+  --pizza-mushroom-cap: #142017;
+  --pizza-ham: #142017;
+  --pizza-ham-fat: #0f1611;
+  --pizza-tuna: #142017;
+  --pizza-onion: #b8f09a;
+  --pizza-gorgonzola: #0f1611;
+  --pizza-blue: #142017;
+  --pizza-parmesan: #0f1611;
+  --pizza-olive: #142017;
+  --pizza-stroke: #b8f09a;
+  --pizza-stroke-width: 1.5;
+
+  --oven-body: #0f1611;
+  --oven-brick: #142017;
+  --oven-mouth: #0b0f0c;
+  --oven-glow: #ffb454;
+  --oven-floor: #142017;
+
+  --radius: 0px;
+  --radius-small: 0px;
+  --radius-pill: 0px;
+
+  --font: var(--font-mono);
+  --font-display: var(--font-mono);
+  --text: 15px;
+  --text-small: 13px;
+  --text-large: 18px;
+  --text-title: 24px;
+  --prompt: "> ";
+
+  color-scheme: dark;
+}
+
+/* Human: the soft version — rounded sans, peachy paper, cards that float on a
+   shadow instead of sitting in a border. */
+html[data-theme="human"] {
+  --bg: #fbf3ea;
+  --bg-pattern: none;
+  --surface: #ffffff;
+  --surface-raised: #fdf1e6;
+  --input-bg: var(--surface-raised);
+  --fg: #3b2a22;
+  --dim: #8a6f5f;
+  --line: rgba(120, 70, 40, 0.14);
+  --card-border: transparent;
+  --shadow: 0 12px 32px -14px rgba(120, 70, 40, 0.35), 0 1px 3px rgba(120, 70, 40, 0.08);
+
+  --accent: #c65d3b;
+  --accent-strong: #a94a2b;
+  --accent-fg: #ffffff;
+  --accent-soft: rgba(198, 93, 59, 0.12);
+  --success: #3a7d44;
+  --success-soft: rgba(58, 125, 68, 0.1);
+
+  --radius: 22px;
+  --radius-small: 12px;
+  --space: 18px;
+
+  --font: ui-rounded, "SF Pro Rounded", "Nunito", "Avenir Next", "URW Gothic", "Segoe UI", system-ui, sans-serif;
+  --font-display: var(--font);
+}
+
+/* Easter egg: shift-click any theme button. Commodore blue, 8-bit type. */
+html[data-theme="c64"] {
+  --bg: #352879;
+  --bg-pattern: none;
+  --surface: #352879;
+  --surface-raised: #40318d;
+  --fg: #cfc8ff;
+  --dim: #a59bf0;
+  --line: #6c5eb5;
+  --shadow: none;
+
+  --accent: #b8c76f;
+  --accent-strong: #9ad284;
+  --accent-fg: #352879;
+  --accent-soft: rgba(184, 199, 111, 0.2);
+  --danger: #f3b3a3;
+  --success: #9ad284;
+  --success-soft: rgba(154, 210, 132, 0.15);
+
+  --pizza-crust: #b8c76f;
+  --pizza-crust-edge: #6f4f25;
+  --pizza-sauce: #9a6759;
+  --pizza-cheese: #b8c76f;
+  --pizza-topping: #ffffff;
+  --pizza-basil: #588d43;
+  --pizza-basil-vein: #9ad284;
+  --pizza-salami: #68372b;
+  --pizza-salami-dot: #9a6759;
+  --pizza-mushroom: #959595;
+  --pizza-mushroom-cap: #6f4f25;
+  --pizza-ham: #9a6759;
+  --pizza-ham-fat: #ffffff;
+  --pizza-tuna: #6f4f25;
+  --pizza-onion: #70a4b2;
+  --pizza-gorgonzola: #9ad284;
+  --pizza-blue: #70a4b2;
+  --pizza-parmesan: #ffffff;
+  --pizza-olive: #000000;
+
+  --oven-body: #6f4f25;
+  --oven-brick: #433900;
+  --oven-mouth: #000000;
+  --oven-glow: #b8c76f;
+  --oven-floor: #959595;
+
+  --radius: 0px;
+  --radius-small: 0px;
+  --radius-pill: 0px;
+
+  --font: "C64 Pro Mono", var(--font-mono);
+  --font-display: var(--font);
+  --prompt: "READY. ";
 
   color-scheme: dark;
 }
@@ -69,46 +284,60 @@ html[data-theme="dark"] {
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  background: var(--bg);
+  min-height: 100vh;
+  background: var(--bg-pattern), var(--bg);
   color: var(--fg);
   font-family: var(--font);
   font-size: var(--text);
   line-height: 1.5;
   padding: var(--space) var(--space) var(--space-large);
+  -webkit-font-smoothing: antialiased;
 }
 
 button, input { font: inherit; color: inherit; }
 
 input[type="text"], input[type="number"] {
   width: 100%;
-  padding: var(--space-small) 12px;
+  padding: 10px 12px;
   border: 1px solid var(--line);
   border-radius: var(--radius-small);
-  background: var(--surface);
+  background: var(--input-bg);
+  box-shadow: inset 0 1px 2px rgba(44, 31, 22, 0.06);
 }
 
 input:focus-visible, button:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 3px solid var(--accent);
   outline-offset: 2px;
 }
 
 .button {
-  padding: var(--space-small) var(--space);
+  padding: 10px var(--space);
   border: 1px solid var(--line);
   border-radius: var(--radius-small);
   background: var(--surface-raised);
   cursor: pointer;
   white-space: nowrap;
+  font-weight: 600;
+  transition: transform 120ms, background-color 120ms;
 }
+
+.button:hover { background: var(--accent-soft); }
+.button:active { transform: translateY(1px); }
 
 .button--primary {
   background: var(--accent);
   border-color: var(--accent);
   color: var(--accent-fg);
-  font-weight: 600;
+  font-weight: 700;
+  box-shadow: var(--shadow);
 }
 
-.button:disabled { opacity: 0.5; cursor: default; }
+.button--primary:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
+.button:disabled { opacity: 0.5; cursor: default; transform: none; }
+
+/* headings carry the display face and, in the nerd theme, a prompt */
+.app__title, .cart__title, .confirmation__title { font-family: var(--font-display); }
+.cart__title::before, .confirmation__title::before { content: var(--prompt); color: var(--accent); }
 
 /* ---------------------------------------------------------------------------
    App shell
@@ -117,43 +346,75 @@ input:focus-visible, button:focus-visible {
 
 .app__header {
   display: flex;
-  align-items: baseline;
+  flex-wrap: wrap;
+  align-items: center;
   justify-content: space-between;
-  gap: var(--space);
+  gap: var(--space-small) var(--space);
   margin-bottom: var(--space-large);
 }
 
-.app__title { font-size: var(--text-title); line-height: 1.2; }
+.app__brand { display: flex; align-items: center; gap: 12px; }
+.app__logo { flex: 0 0 44px; width: 44px; height: 44px; }
+
+.app__title {
+  font-size: var(--text-title);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.app__title::before { content: var(--prompt); color: var(--accent); }
+.app__tagline { color: var(--dim); font-size: var(--text-small); }
 .app__hint { color: var(--dim); }
 
+/* theme switch: one segmented control, every option a button (aria-pressed) */
 .theme-toggle {
-  padding: 4px 10px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-pill);
   background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.theme-toggle__option {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: none;
   color: var(--dim);
   font-size: var(--text-small);
+  line-height: 1.4;
   cursor: pointer;
 }
+
+.theme-toggle__option:hover { color: var(--fg); }
+.theme-toggle__option[aria-pressed="true"] { background: var(--accent); color: var(--accent-fg); font-weight: 600; }
+.theme-toggle__icon { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
 /* ---------------------------------------------------------------------------
    Menu
    --------------------------------------------------------------------------- */
-.menu { list-style: none; display: grid; gap: var(--space-small); }
+.menu { list-style: none; display: grid; gap: 10px; }
 
 .menu__item {
-  border: 1px solid var(--line);
+  border: 1px solid var(--card-border);
   border-radius: var(--radius);
   background: var(--surface);
+  box-shadow: var(--shadow);
   overflow: hidden;
+  transition: border-color 120ms, box-shadow 120ms;
 }
 
-.menu__item.is-selected { border-color: var(--accent); }
+.menu__item.is-selected { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), var(--shadow); }
 
 .pizza {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   width: 100%;
   padding: 12px var(--space);
   border: 0;
@@ -164,15 +425,41 @@ input:focus-visible, button:focus-visible {
 
 .pizza:hover { background: var(--surface-raised); }
 
-.pizza__art { flex: 0 0 48px; width: 48px; height: 48px; }
-.pizza__text { flex: 1; display: grid; }
-.pizza__name { font-weight: 600; }
+.pizza__art { flex: 0 0 48px; width: 48px; height: 48px; transition: transform 160ms; }
+.pizza:hover .pizza__art { transform: rotate(-8deg) scale(1.06); }
+.menu__item.is-selected .pizza__art { transform: rotate(-8deg) scale(1.12); }
+.pizza__text { flex: 1; min-width: 0; display: grid; }
+.pizza__name { font-weight: 700; }
 .pizza__recipe { color: var(--dim); font-size: var(--text-small); }
-.pizza__price { font-variant-numeric: tabular-nums; }
+.pizza__price { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
 
+.pizza-art { display: block; overflow: visible; }
+[class^="pizza-art__"] { stroke: var(--pizza-stroke); stroke-width: var(--pizza-stroke-width); stroke-linejoin: round; }
 .pizza-art__crust { fill: var(--pizza-crust); }
+.pizza-art__crust-edge { fill: var(--pizza-crust-edge); }
 .pizza-art__sauce { fill: var(--pizza-sauce); }
+.pizza-art__cheese { fill: var(--pizza-cheese); }
 .pizza-art__topping { fill: var(--pizza-topping); }
+.pizza-art__basil { fill: var(--pizza-basil); }
+.pizza-art__basil-vein { fill: var(--pizza-basil-vein); }
+.pizza-art__salami { fill: var(--pizza-salami); }
+.pizza-art__salami-dot { fill: var(--pizza-salami-dot); }
+.pizza-art__mushroom { fill: var(--pizza-mushroom); }
+.pizza-art__mushroom-cap { fill: var(--pizza-mushroom-cap); }
+.pizza-art__ham { fill: var(--pizza-ham); }
+.pizza-art__ham-fat { fill: var(--pizza-ham-fat); }
+.pizza-art__tuna { fill: var(--pizza-tuna); }
+svg .pizza-art__onion { fill: none; stroke: var(--pizza-onion); stroke-width: 2; }
+.pizza-art__gorgonzola { fill: var(--pizza-gorgonzola); }
+.pizza-art__blue { fill: var(--pizza-blue); }
+.pizza-art__parmesan { fill: var(--pizza-parmesan); }
+.pizza-art__olive { fill: var(--pizza-olive); }
+.pizza-art__olive-hole { fill: var(--pizza-cheese); }
+
+@media (min-width: 720px) {
+  .menu { grid-template-columns: 1fr 1fr; }
+  .menu__item.is-selected { grid-column: 1 / -1; }
+}
 
 /* ---------------------------------------------------------------------------
    Configurator
@@ -181,56 +468,73 @@ input:focus-visible, button:focus-visible {
   display: grid;
   gap: var(--space);
   padding: var(--space);
-  border-top: 1px solid var(--line);
+  border-top: 1px dashed var(--line);
   background: var(--surface-raised);
+  animation: configurator-open 160ms ease-out;
 }
 
-.configurator__group { border: 0; display: grid; gap: 4px; }
-.configurator__legend { font-weight: 600; margin-bottom: 4px; }
+@keyframes configurator-open {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
 
-.choice { display: flex; align-items: center; gap: var(--space-small); cursor: pointer; }
+.configurator__group { border: 0; display: grid; gap: 6px; }
+.configurator__legend { font-weight: 700; margin-bottom: 4px; }
+
+.choice { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.choice input { accent-color: var(--accent); width: 18px; height: 18px; }
 .choice__label { flex: 1; }
 .choice__note { color: var(--dim); font-size: var(--text-small); font-variant-numeric: tabular-nums; }
 
 .configurator__actions { display: flex; align-items: end; gap: var(--space); }
 .configurator__quantity { display: grid; gap: 4px; flex: 0 0 96px; }
+.configurator__actions .button--primary { flex: 1; }
+
+@media (min-width: 720px) {
+  .configurator { grid-template-columns: 1fr 1fr 1fr; }
+  .configurator__actions { grid-column: 1 / -1; }
+  .configurator__actions .button--primary { flex: 0 1 auto; }
+}
 
 /* ---------------------------------------------------------------------------
-   Cart + receipt
+   Cart + receipt — the receipt is the point of the app; everything in it
+   must read at 380 px without zooming.
    --------------------------------------------------------------------------- */
 .cart {
   margin-top: var(--space-large);
   padding: var(--space);
-  border: 1px solid var(--line);
+  border: 1px solid var(--card-border);
   border-radius: var(--radius);
   background: var(--surface);
+  box-shadow: var(--shadow);
   display: grid;
   gap: var(--space);
 }
 
-.cart__title { font-size: var(--text-large); }
+.cart__title { font-size: var(--text-large); font-weight: 800; }
 .cart__empty { color: var(--dim); }
-.cart__codes { display: grid; gap: var(--space); }
-.cart__checkout { display: grid; gap: var(--space-small); padding-top: var(--space); border-top: 1px solid var(--line); }
+.cart__codes { display: grid; gap: var(--space); padding-top: var(--space); border-top: 1px dashed var(--line); }
+.cart__checkout { display: grid; gap: var(--space-small); padding-top: var(--space); border-top: 1px dashed var(--line); }
 .cart__name { display: grid; gap: 4px; }
 .cart__error { color: var(--danger); font-size: var(--text-small); }
 
 .breakdown { display: grid; gap: var(--space); transition: opacity 150ms; }
 .breakdown.is-pending { opacity: 0.6; }
 
-.breakdown__lines { list-style: none; display: grid; gap: var(--space-small); }
+.breakdown__lines { list-style: none; display: grid; gap: 12px; }
 .breakdown__line { display: grid; gap: 2px; }
 .breakdown__head { display: flex; align-items: center; gap: var(--space-small); }
-.breakdown__title { flex: 1; font-weight: 600; }
-.breakdown__amount { font-variant-numeric: tabular-nums; }
-.breakdown__detail, .breakdown__removed { color: var(--dim); font-size: var(--text-small); }
+.breakdown__title { flex: 1; min-width: 0; font-weight: 700; }
+.breakdown__amount { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
+.breakdown__detail, .breakdown__removed { color: var(--dim); font-size: var(--text-small); font-variant-numeric: tabular-nums; }
 .breakdown__removed { color: var(--accent); }
 
 .breakdown__remove {
   width: 28px;
   height: 28px;
+  flex: 0 0 28px;
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: none;
   color: var(--dim);
   line-height: 1;
@@ -239,17 +543,29 @@ input:focus-visible, button:focus-visible {
 
 .breakdown__remove:hover { color: var(--danger); border-color: var(--danger); }
 
-.breakdown__sums { display: grid; gap: 4px; padding-top: var(--space-small); border-top: 1px solid var(--line); }
-.breakdown__sum { display: flex; justify-content: space-between; gap: var(--space); }
-.breakdown__sum dd { font-variant-numeric: tabular-nums; }
+.breakdown__sums { display: grid; gap: 6px; padding-top: 10px; border-top: 1px dashed var(--line); }
+.breakdown__sum { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space); }
+.breakdown__sum dt { min-width: 0; overflow-wrap: anywhere; }
+.breakdown__sum dd { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .breakdown__sum--adjustment { color: var(--success); }
 .breakdown__sum--adjustment dt { font-family: var(--font-mono); font-size: var(--text-small); }
-.breakdown__sum--total { font-weight: 700; font-size: var(--text-large); margin-top: 4px; }
+.breakdown__sum--adjustment dd { font-weight: 600; }
+
+.breakdown__sum--total {
+  margin-top: 6px;
+  padding-top: 10px;
+  border-top: 3px double var(--fg);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-large);
+}
+
+.breakdown__sum--total dd { font-size: 24px; color: var(--accent); }
 
 /* codes */
 .code { display: grid; gap: var(--space-small); }
 .code__form { display: flex; align-items: end; gap: var(--space-small); }
-.code__label { flex: 1; display: grid; gap: 4px; }
+.code__label { flex: 1; min-width: 0; display: grid; gap: 4px; }
 .code__label input { font-family: var(--font-mono); text-transform: uppercase; }
 .code__applied { list-style: none; display: flex; flex-wrap: wrap; gap: var(--space-small); }
 .code__error { color: var(--danger); font-size: var(--text-small); }
@@ -258,18 +574,22 @@ input:focus-visible, button:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 2px 6px 2px 10px;
-  border-radius: 999px;
-  background: var(--accent-soft);
+  max-width: 100%;
+  padding: 3px 6px 3px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--success-soft);
+  color: var(--success);
   font-family: var(--font-mono);
   font-size: var(--text-small);
+  font-weight: 600;
+  overflow-wrap: anywhere;
 }
 
-.chip__remove { border: 0; background: none; color: var(--dim); cursor: pointer; line-height: 1; }
+.chip__remove { border: 0; background: none; color: var(--dim); cursor: pointer; line-height: 1; padding: 2px 4px; }
 .chip__remove:hover { color: var(--danger); }
 
 /* ---------------------------------------------------------------------------
-   Confirmation
+   Confirmation — the order is in the oven
    --------------------------------------------------------------------------- */
 .confirmation {
   display: grid;
@@ -278,7 +598,29 @@ input:focus-visible, button:focus-visible {
   border: 1px solid var(--accent);
   border-radius: var(--radius);
   background: var(--surface);
+  box-shadow: var(--shadow);
 }
 
-.confirmation__title { font-size: var(--text-large); }
-.confirmation__number { font-family: var(--font-mono); }
+.confirmation__title { font-size: var(--text-large); font-weight: 800; }
+.confirmation__number { font-family: var(--font-mono); color: var(--accent); }
+
+.oven { display: block; width: min(100%, 260px); height: auto; margin: 0 auto; overflow: visible; }
+.oven__body { fill: var(--oven-body); }
+.oven__brick { fill: var(--oven-brick); }
+.oven__mouth { fill: var(--oven-mouth); }
+.oven__glow { fill: var(--oven-glow); }
+.oven__floor { fill: var(--oven-floor); }
+.oven__steam { fill: none; stroke: var(--dim); stroke-width: 2; stroke-linecap: round; opacity: 0.7; animation: steam 2.4s ease-in-out infinite; }
+.oven__steam:nth-child(2) { animation-delay: 0.8s; }
+.oven__steam:nth-child(3) { animation-delay: 1.6s; }
+
+@keyframes steam {
+  0% { transform: translateY(0); opacity: 0; }
+  30% { opacity: 0.7; }
+  100% { transform: translateY(-10px); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .oven__steam, .configurator { animation: none; }
+  .pizza__art, .button { transition: none; }
+}
