@@ -8,6 +8,9 @@ gem "sqlite3", ">= 2.1"
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
 
+# json 3.0 dropped the positional options hash that ActiveSupport::JSON.decode still passes
+gem "json", "~> 2.0"
+
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
 
