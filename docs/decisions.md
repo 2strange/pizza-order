@@ -164,3 +164,12 @@ Format: **when (UTC) · decision · rejected alternative · why**.
   deriving a name from the code in the seeds; keeping the code as the label. Why:
   `ZWEIKLEINESALAMIFUEREINS` is what you type, not what a receipt should say, and a
   name cannot be guessed from a code — `menu.json` requires it per code.
+- **08:05 · Deploy lives on its own branch (`deploy`), not on `main`.** Capistrano with
+  the house recipes (`capistrano-recipes2go`): a proxy host terminates TLS, the app host
+  runs nginx + Puma under systemd, Vite builds on the server. Rejected: Kamal (needs
+  Docker on the target), deploy files on `main`. Why: `main` should read as the product;
+  whoever opens the repo sees the domain first and the infrastructure only when they
+  look for it. Hosts and ports stay out of the repository (`config/deploy/servers.yml`).
+- **08:05 · Node for the build is pinned on the deploy PATH, not via the server's nvm
+  default.** Rejected: `nvm alias default`. Why: other apps share that host; this deploy
+  must not change what they see.

@@ -1,0 +1,8 @@
+# Copy to servers.yml (git-ignored) and fill in the hosts.
+production:
+  user: deploy
+  proxy_ip: 100.0.0.1        # terminates TLS, forwards to the app host
+  app_ip: 100.0.0.2          # runs nginx + Puma
+  upstream_host: 10.0.0.2    # app host as seen from the proxy
+  upstream_port: 4650        # app nginx listens here
+  domains: [pizza.example.com]

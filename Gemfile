@@ -43,4 +43,8 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+
+  # Deploy: Capistrano with the house recipes (they bring capistrano, -rails and -rvm)
+  gem "capistrano-bundler", require: false
+  gem "capistrano-recipes2go", require: false, github: "2strange/capistrano-recipes2go", tag: "v0.8.0"
 end
