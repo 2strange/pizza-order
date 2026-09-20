@@ -1,5 +1,7 @@
 # Pizza Order
 
+**Live:** https://pizza.trendgegner.com
+
 A small, complete pizza ordering app: browse the menu, configure a pizza (size, extras,
 leave out ingredients), watch the price update live, redeem promotion and discount codes,
 place the order. No payment, no login — the point is the **domain model** behind the price.
@@ -46,6 +48,7 @@ Every step is stamped by GitHub, not by hand. Times are UTC.
 | 2026-09-19 09:30 | JSON API and ordering UI on `main` | [run](../../actions/runs/35434853784) |
 | 2026-09-19 13:44 – 15:10 | Pizzeria look: tokens, three themes, one cartoon pizza per menu item | commits |
 | 2026-09-20 07:19 | Readable names for promotions and discount codes; feature complete | [run](../../actions/runs/35496548369) |
+| 2026-09-20 10:16 | Deployed to [pizza.trendgegner.com](https://pizza.trendgegner.com) (Capistrano, on the `deploy` branch) | live |
 | 2026-09-20 | Release | [releases](../../releases) |
 
 Wall-clock, the app took one Saturday session and a short Sunday morning, including the
