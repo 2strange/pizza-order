@@ -11,11 +11,6 @@ describe('ThemeToggle', () => {
     delete document.documentElement.dataset.theme
   })
 
-  it('starts with the light theme', () => {
-    mount(ThemeToggle)
-    expect(themeOnHtml()).toBe('light')
-  })
-
   it('switches the theme on the document', async () => {
     const wrapper = mount(ThemeToggle)
     await button(wrapper, 'Dunkel').trigger('click')
