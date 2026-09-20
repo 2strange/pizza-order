@@ -13,7 +13,7 @@ set :keep_releases, 3
 
 append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "storage", "node_modules"
 
-set :rvm_ruby_version, "3.4.4"
+set :rvm_ruby_version, "3.4.2"
 set :rvm_custom_path,  "/usr/local/rvm"
 set :rvm_map_bins,     %w[gem rake ruby bundle rails]
 

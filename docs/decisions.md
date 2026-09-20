@@ -15,7 +15,7 @@ Format: **when (UTC) · decision · rejected alternative · why**.
   expects; Cypress runs against a real test-mode server (`bin/e2e`).
 - **08:52 · Propshaft removed.** Rejected: keeping the default asset pipeline next to
   Vite. Why: two asset pipelines for one stylesheet is one too many.
-- **08:54 · Ruby 3.4.10.** Rejected: Ruby 3.2.6 (the version the original challenge
+- **08:54 · Ruby 3.4.** Rejected: Ruby 3.2.6 (the version the original challenge
   pinned). Why: 3.2 reached end of life in March 2026 — Brakeman flags it, and a fresh
   app should not start on an unsupported runtime.
 - **09:02 · `json` gem pinned to 2.x.** Rejected: living with json 3.0.2 from the
@@ -164,6 +164,7 @@ Format: **when (UTC) · decision · rejected alternative · why**.
   deriving a name from the code in the seeds; keeping the code as the label. Why:
   `ZWEIKLEINESALAMIFUEREINS` is what you type, not what a receipt should say, and a
   name cannot be guessed from a code — `menu.json` requires it per code.
+<<<<<<< HEAD
 - **08:05 · Deploy lives on its own branch (`deploy`), not on `main`.** Capistrano with
   the house recipes (`capistrano-recipes2go`): a proxy host terminates TLS, the app host
   runs nginx + Puma under systemd, Vite builds on the server. Rejected: Kamal (needs
@@ -173,3 +174,9 @@ Format: **when (UTC) · decision · rejected alternative · why**.
 - **08:05 · Node for the build is pinned on the deploy PATH, not via the server's nvm
   default.** Rejected: `nvm alias default`. Why: other apps share that host; this deploy
   must not change what they see.
+=======
+- **08:30 · Ruby 3.4.2, the version the target hosts run.** Rejected: 3.4.10 (the
+  newest patch release, used until now). Why: one Ruby everywhere — CI, the developer's
+  machine and the servers — beats being three patch releases ahead of production; 3.4 is
+  supported either way.
+>>>>>>> main
