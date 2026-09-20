@@ -117,3 +117,7 @@ Format: **when (UTC) · decision · rejected alternative · why**.
   Rejected: hand-rolled formatting; "€ 16,29". Why: the platform knows the German
   convention (symbol after the number, non-breaking space); the division by 100
   happens after every price has been decided by the server.
+- **09:40 · `main` was rewritten once.** A `fixup!` commit reached `main` by mistake and
+  was force-pushed away minutes later, squashed into the commit it belonged to. Rejected:
+  leaving it. Why: the tree is byte-identical either way; the history should read as it
+  was meant. Lesson: merge the SHAs an agent reports, never the branch it is still on.
