@@ -6,6 +6,6 @@ class DiscountCode < ApplicationRecord
 
   def apply(subtotal_cents)
     deduction = (subtotal_cents * percent / BigDecimal(100)).round(0, :half_up).to_i
-    Adjustment.new(label: name, code: code, amount_cents: -deduction)
+    Adjustment.new(label: name, code: code, kind: :discount, amount_cents: -deduction)
   end
 end

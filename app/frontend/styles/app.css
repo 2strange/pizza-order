@@ -554,6 +554,15 @@ svg .pizza-art__onion { fill: none; stroke: var(--pizza-onion); stroke-width: 2;
   overflow-wrap: anywhere;
 }
 
+/* what the server made of the code: Aktion or Rabatt */
+.chip__kind {
+  font-family: var(--font);
+  font-weight: 500;
+  color: var(--dim);
+  padding-right: 6px;
+  border-right: 1px solid var(--line);
+}
+
 .chip__remove { border: 0; background: none; color: var(--dim); cursor: pointer; line-height: 1; padding: 2px 4px; }
 .chip__remove:hover { color: var(--danger); }
 

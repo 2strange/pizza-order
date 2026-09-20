@@ -48,7 +48,7 @@ class Order < ApplicationRecord
     transaction do
       save! # freezes the item prices first; the stamp below must not touch the items
       update!(placed_at: Time.current,
-              adjustments: final.adjustments.map { |a| { label: a.label, code: a.code, amount_cents: a.amount_cents } },
+              adjustments: final.adjustments.map { |a| { label: a.label, code: a.code, kind: a.kind, amount_cents: a.amount_cents } },
               total_cents: final.total_cents)
     end
   end
@@ -74,7 +74,7 @@ class Order < ApplicationRecord
   private
 
   def receipt
-    frozen = adjustments.map { |a| Adjustment.new(label: a["label"], code: a["code"], amount_cents: a["amount_cents"]) }
+    frozen = adjustments.map { |a| Adjustment.new(label: a["label"], code: a["code"], kind: a["kind"]&.to_sym, amount_cents: a["amount_cents"]) }
     Quote.new(items: order_items.to_a, adjustments: frozen)
   end
 
