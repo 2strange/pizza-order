@@ -11,8 +11,8 @@ const quote = {
       base_price_cents: 420, extras_price_cents: 0, unit_price_cents: 420, line_price_cents: 1260 },
   ],
   adjustments: [
-    { label: 'ZWEIKLEINESALAMIFUEREINS', amount_cents: -840 },
-    { label: '5PROZENTAUFALLES', amount_cents: -86 },
+    { label: '2 kleine Salami für 1', code: 'ZWEIKLEINESALAMIFUEREINS', amount_cents: -840 },
+    { label: '5 % auf alles', code: '5PROZENTAUFALLES', amount_cents: -86 },
   ],
   subtotal_cents: 2555,
   total_cents: 1629,
@@ -35,7 +35,7 @@ describe('PriceBreakdown', () => {
   it('shows every adjustment, the subtotal and the total', () => {
     const wrapper = mount(PriceBreakdown, { props: { quote } })
 
-    expect(sums(wrapper, '.breakdown__sum--adjustment')).toEqual([['ZWEIKLEINESALAMIFUEREINS', '-8,40 €'], ['5PROZENTAUFALLES', '-0,86 €']])
+    expect(sums(wrapper, '.breakdown__sum--adjustment')).toEqual([['2 kleine Salami für 1', '-8,40 €'], ['5 % auf alles', '-0,86 €']])
     expect(sums(wrapper, '.breakdown__sum')[0]).toEqual(['Zwischensumme', '25,55 €'])
     expect(sums(wrapper, '.breakdown__sum--total')).toEqual([['Gesamt', '16,29 €']])
   })

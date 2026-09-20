@@ -19,7 +19,7 @@ describe('ordering', () => {
       cy.get('input').type('ZWEIKLEINESALAMIFUEREINS')
       cy.contains('button', 'Einlösen').click()
     })
-    cy.contains('.breakdown__sum--adjustment', 'ZWEIKLEINESALAMIFUEREINS').contains(/-4,20\s€/)
+    cy.contains('.breakdown__sum--adjustment', '2 kleine Salami für 1').contains(/-4,20\s€/)
 
     cy.contains('.code', 'Rabattcode').within(() => {
       cy.get('input').type('GIBTSNICHT')
@@ -29,7 +29,7 @@ describe('ordering', () => {
       cy.contains('button', 'Einlösen').click()
       cy.get('.chip').should('contain', '5PROZENTAUFALLES')
     })
-    cy.contains('.breakdown__sum--adjustment', '5PROZENTAUFALLES').contains(/-0,21\s€/)
+    cy.contains('.breakdown__sum--adjustment', '5 % auf alles').contains(/-0,21\s€/)
     cy.contains('.breakdown__sum--total', /3,99\s€/)
 
     cy.get('.cart__name input').type('Mia')

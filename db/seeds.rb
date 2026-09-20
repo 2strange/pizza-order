@@ -28,6 +28,7 @@ end
 
 menu["promotions"].each do |code, deal|
   Promotion.find_or_initialize_by(code: code).update!(
+    name: deal.fetch("name"),
     pizza: Pizza.find_by!(name: deal["target"]),
     size: Size.all.find { |s| s.label == deal["target_size"] },
     from_quantity: deal["from"],
@@ -36,5 +37,5 @@ menu["promotions"].each do |code, deal|
 end
 
 menu["discounts"].each do |code, discount|
-  DiscountCode.find_or_initialize_by(code: code).update!(percent: discount["deduction_in_percent"])
+  DiscountCode.find_or_initialize_by(code: code).update!(name: discount.fetch("name"), percent: discount["deduction_in_percent"])
 end

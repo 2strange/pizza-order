@@ -6,6 +6,7 @@ class Promotion < ApplicationRecord
   attribute :size, Size::Type.new
 
   validates :code, presence: true, uniqueness: true
+  validates :name, presence: true
   validates :size, presence: { message: "is not a known size" }
   validates :from_quantity, numericality: { only_integer: true, greater_than: 1 }
   validates :to_quantity, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
@@ -24,7 +25,7 @@ class Promotion < ApplicationRecord
     in_deal = units.first(groups * from_quantity)
     free = in_deal.first(groups * (from_quantity - to_quantity))
 
-    Adjustment.new(label: code, amount_cents: -free.sum(&:base_price_cents), units: in_deal.tally)
+    Adjustment.new(label: name, code: code, amount_cents: -free.sum(&:base_price_cents), units: in_deal.tally)
   end
 
   def applies_to?(item)

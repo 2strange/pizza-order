@@ -26,8 +26,8 @@ RSpec.describe Order do
       quote = golden.quote
 
       expect(quote.subtotal_cents).to eq 2555
-      expect(quote.adjustments.map { |a| [ a.label, a.amount_cents ] })
-        .to eq [ [ "ZWEIKLEINESALAMIFUEREINS", -840 ], [ "5PROZENTAUFALLES", -86 ] ]
+      expect(quote.adjustments.map { |a| [ a.label, a.code, a.amount_cents ] })
+        .to eq [ [ "2 kleine Salami für 1", "ZWEIKLEINESALAMIFUEREINS", -840 ], [ "5 % auf alles", "5PROZENTAUFALLES", -86 ] ]
       expect(quote.total_cents).to eq 1629
     end
 
@@ -47,8 +47,8 @@ RSpec.describe Order do
     it "stamps the order and freezes the receipt" do
       expect(placed.placed_at).to be_present
       expect(placed.total_cents).to eq 399
-      expect(placed.adjustments).to eq [ { "label" => "ZWEIKLEINESALAMIFUEREINS", "amount_cents" => -420 },
-                                         { "label" => "5PROZENTAUFALLES", "amount_cents" => -21 } ]
+      expect(placed.adjustments).to eq [ { "label" => "2 kleine Salami für 1", "code" => "ZWEIKLEINESALAMIFUEREINS", "amount_cents" => -420 },
+                                         { "label" => "5 % auf alles", "code" => "5PROZENTAUFALLES", "amount_cents" => -21 } ]
     end
 
     it "keeps the receipt when the discount changes" do
@@ -61,7 +61,7 @@ RSpec.describe Order do
       Promotion.find_by!(code: "ZWEIKLEINESALAMIFUEREINS").destroy!
       receipt = Order.find(placed.id).quote
 
-      expect(receipt.adjustments.map(&:label)).to eq %w[ZWEIKLEINESALAMIFUEREINS 5PROZENTAUFALLES]
+      expect(receipt.adjustments.map(&:label)).to eq [ "2 kleine Salami für 1", "5 % auf alles" ]
       expect(receipt.total_cents).to eq 399
     end
 
@@ -121,7 +121,8 @@ RSpec.describe Order do
 
     context "when two promotions target the same pizzas" do
       before do
-        Promotion.create!(code: "DREIKLEINESALAMIFUERZWEI", pizza: pizza("Salami"), size: :small, from_quantity: 3, to_quantity: 2)
+        Promotion.create!(code: "DREIKLEINESALAMIFUERZWEI", name: "3 kleine Salami für 2",
+                          pizza: pizza("Salami"), size: :small, from_quantity: 3, to_quantity: 2)
       end
 
       it "let each pizza take part in one deal only, in the order the codes were given" do

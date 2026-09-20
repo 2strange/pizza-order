@@ -16,8 +16,8 @@ RSpec.describe "Quotes", type: :request do
         "base_price_cents" => 600, "extras_price_cents" => 100, "unit_price_cents" => 700, "line_price_cents" => 700
       )
       expect(quote["items"].map { |i| i["line_price_cents"] }).to eq [ 700, 1260, 595 ]
-      expect(quote["adjustments"]).to eq [ { "label" => "ZWEIKLEINESALAMIFUEREINS", "amount_cents" => -840 },
-                                           { "label" => "5PROZENTAUFALLES", "amount_cents" => -86 } ]
+      expect(quote["adjustments"]).to eq [ { "label" => "2 kleine Salami für 1", "code" => "ZWEIKLEINESALAMIFUEREINS", "amount_cents" => -840 },
+                                           { "label" => "5 % auf alles", "code" => "5PROZENTAUFALLES", "amount_cents" => -86 } ]
       expect(quote["subtotal_cents"]).to eq 2555
       expect(quote["total_cents"]).to eq 1629
     end

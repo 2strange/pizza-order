@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_19_120100) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_20_070000) do
   create_table "discount_codes", force: :cascade do |t|
     t.string "code", null: false
     t.datetime "created_at", null: false
+    t.string "name", null: false
     t.integer "percent", null: false
     t.datetime "updated_at", null: false
     t.index ["code"], name: "index_discount_codes_on_code", unique: true
@@ -81,6 +82,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_19_120100) do
     t.string "code", null: false
     t.datetime "created_at", null: false
     t.integer "from_quantity", null: false
+    t.string "name", null: false
     t.integer "pizza_id", null: false
     t.string "size", null: false
     t.integer "to_quantity", null: false

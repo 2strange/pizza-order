@@ -7,7 +7,7 @@ class QuotePresenter
 
   def to_h
     { items: @quote.items.map { |item| item_hash(item) },
-      adjustments: @quote.adjustments.map { |adjustment| { label: adjustment.label, amount_cents: adjustment.amount_cents } },
+      adjustments: @quote.adjustments.map { |a| { label: a.label, code: a.code, amount_cents: a.amount_cents } },
       subtotal_cents: @quote.subtotal_cents,
       total_cents: @quote.total_cents }
   end

@@ -35,8 +35,8 @@ RSpec.describe "Orders", type: :request do
 
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include("number" => format("#%04d", id), "customer_name" => "Mia")
-      expect(response.parsed_body["quote"]["adjustments"]).to eq [ { "label" => "ZWEIKLEINESALAMIFUEREINS", "amount_cents" => -840 },
-                                                                  { "label" => "5PROZENTAUFALLES", "amount_cents" => -86 } ]
+      expect(response.parsed_body["quote"]["adjustments"]).to eq [ { "label" => "2 kleine Salami für 1", "code" => "ZWEIKLEINESALAMIFUEREINS", "amount_cents" => -840 },
+                                                                  { "label" => "5 % auf alles", "code" => "5PROZENTAUFALLES", "amount_cents" => -86 } ]
       expect(response.parsed_body["quote"]["total_cents"]).to eq 1629
     end
 

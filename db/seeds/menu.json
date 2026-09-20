@@ -10,9 +10,9 @@
   },
   "ingredients": { "Zwiebeln": 1.0, "Käse": 2.0, "Oliven": 2.5 },
   "promotions": {
-    "ZWEIKLEINESALAMIFUEREINS": { "target": "Salami", "target_size": "Klein", "from": 2, "to": 1 }
+    "ZWEIKLEINESALAMIFUEREINS": { "name": "2 kleine Salami für 1", "target": "Salami", "target_size": "Klein", "from": 2, "to": 1 }
   },
   "discounts": {
-    "5PROZENTAUFALLES": { "deduction_in_percent": 5 }
+    "5PROZENTAUFALLES": { "name": "5 % auf alles", "deduction_in_percent": 5 }
   }
 }
