@@ -33,10 +33,20 @@ describe('PizzaConfigurator', () => {
     expect(wrapper.emitted('add')).toEqual([[{ pizza_id: 2, size: 'small', quantity: 2, extra_ids: [1, 3], removed_ingredient_ids: [2] }]])
   })
 
-  it('shows the prices the menu names, nothing computed', () => {
+  it('shows every price for the chosen size, the way the server charges it', async () => {
     const wrapper = mount(PizzaConfigurator, { props: { pizza, sizes, extras } })
-    const notes = wrapper.findAll('.choice__note').map((note) => note.text().replace(/\s/g, ' '))
+    const notes = () => wrapper.findAll('.choice__note').map((note) => note.text().replace(/\s/g, ' '))
 
-    expect(notes).toEqual(['×0,7', '×1,0', '×1,3', '+ 1,00 €', '+ 2,00 €', '+ 2,50 €'])
+    // medium is preselected: extras at menu price
+    expect(notes()).toEqual(['4,20 € · ×0,7', '6,00 € · ×1,0', '7,80 € · ×1,3', '+ 1,00 €', '+ 2,00 €', '+ 2,50 €'])
+
+    await wrapper.find('input[value="small"]').setValue()
+    // small: extras scale with the size too, rounded half up like Size#scale
+    expect(notes().slice(3)).toEqual(['+ 0,70 €', '+ 1,40 €', '+ 1,75 €'])
+  })
+
+  it('limits the quantity to what the server accepts', () => {
+    const wrapper = mount(PizzaConfigurator, { props: { pizza, sizes, extras, maxQuantity: 50 } })
+    expect(wrapper.find('input[type="number"]').attributes('max')).toBe('50')
   })
 })

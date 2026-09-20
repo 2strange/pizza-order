@@ -178,3 +178,12 @@ Format: **when (UTC) · decision · rejected alternative · why**.
   `og:image` (1200×630, the Margherita on the parchment), `lang="de"` (the UI is
   German), the Margherita as favicon. Rejected: leaving it to the messenger's
   fallback. Why: a link gets forwarded; the first thing anyone sees is the card.
+- **13:05 · Second review round (Codex), fixed before the repo goes out.** The configurator
+  showed extras at menu price while small and large pizzas are charged scaled — now every
+  price in the configurator is the chosen size's price, rounded the way `Size#scale` rounds;
+  the cart still trusts only the server's quote. A cart change marks the quote stale at once
+  (no ordering on a stale total during the debounce). `GET /orders/:id` is gone: sequential
+  ids would have handed out any receipt; nothing used it. A name is required to place
+  (`on: :place`), quotes carry none. A body with the wrong shape is refused with 422 instead
+  of having keys dropped. The Rails generator leftovers (PWA, mailer, job skeletons,
+  `allow_browser`) are removed; `bin/dev` now does what the README says.

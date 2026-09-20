@@ -50,6 +50,7 @@ export function useCart(api = defaultApi) {
 
   function scheduleQuote() {
     clearTimeout(timer)
+    state.pending = true // the quote on screen is stale until the server answers
     timer = setTimeout(refreshQuote, QUOTE_DELAY)
   }
 
@@ -67,7 +68,10 @@ export function useCart(api = defaultApi) {
   // and refuses what it does not know (or a second discount).
   async function addCode(code) {
     state.codes.push(code)
-    if (!(await refreshQuote())) state.codes.pop()
+    if (!(await refreshQuote())) {
+      const index = state.codes.lastIndexOf(code) // not pop(): another code may have landed meanwhile
+      if (index >= 0) state.codes.splice(index, 1)
+    }
   }
 
   function removeCode(index) {

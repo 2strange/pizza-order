@@ -79,4 +79,10 @@ describe('useCart', () => {
     expect(api.placeOrder).toHaveBeenCalledWith({ items: [salami], codes: [], customer_name: 'Mia' })
     expect(cart.state.order).toEqual(placed)
   })
+
+  it('marks the quote stale the moment an item changes, before the server answers', () => {
+    const cart = useCart(api)
+    cart.addItem(salami)
+    expect(cart.state.pending).toBe(true)
+  })
 })

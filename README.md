@@ -19,10 +19,12 @@ objects (`Pizza`, `Order`, `OrderItem`, `Promotion`, …) inside a Rails + Vue a
 
 ## Getting started
 
+Ruby 3.4 (see `.ruby-version`) and Node 22.12 or newer.
+
 ```bash
 bundle install && npm install
-bin/rails db:prepare
-bin/dev            # Rails + Vite dev server → http://localhost:3000
+bin/rails db:prepare   # creates the SQLite database and loads the menu
+bin/dev                # Rails + Vite dev server (foreman) → http://localhost:3000
 ```
 
 ## Tests

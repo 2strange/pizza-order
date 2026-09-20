@@ -9,10 +9,12 @@ const quote = {
       base_price_cents: 600, extras_price_cents: 100, unit_price_cents: 700, line_price_cents: 700 },
     { pizza: 'Salami', size: 'Klein', quantity: 3, extras: [], removed: [],
       base_price_cents: 420, extras_price_cents: 0, unit_price_cents: 420, line_price_cents: 1260 },
+    { pizza: 'Salami', size: 'Klein', quantity: 1, extras: ['Oliven'], removed: [],
+      base_price_cents: 420, extras_price_cents: 175, unit_price_cents: 595, line_price_cents: 595 },
   ],
   adjustments: [
-    { label: '2 kleine Salami für 1', code: 'ZWEIKLEINESALAMIFUEREINS', amount_cents: -840 },
-    { label: '5 % auf alles', code: '5PROZENTAUFALLES', amount_cents: -86 },
+    { label: '2 kleine Salami für 1', code: 'ZWEIKLEINESALAMIFUEREINS', kind: 'promotion', amount_cents: -840 },
+    { label: '5 % auf alles', code: '5PROZENTAUFALLES', kind: 'discount', amount_cents: -86 },
   ],
   subtotal_cents: 2555,
   total_cents: 1629,
@@ -25,8 +27,8 @@ describe('PriceBreakdown', () => {
   it('shows every line with its parts', () => {
     const wrapper = mount(PriceBreakdown, { props: { quote } })
 
-    expect(text(wrapper, '.breakdown__title')).toEqual(['Salami · Mittel · 1×', 'Salami · Klein · 3×'])
-    expect(text(wrapper, '.breakdown__amount')).toEqual(['7,00 €', '12,60 €'])
+    expect(text(wrapper, '.breakdown__title')).toEqual(['Salami · Mittel · 1×', 'Salami · Klein · 3×', 'Salami · Klein · 1×'])
+    expect(text(wrapper, '.breakdown__amount')).toEqual(['7,00 €', '12,60 €', '5,95 €'])
     expect(text(wrapper, '.breakdown__detail')[0]).toBe('6,00 € + 1,00 € (Zwiebeln) = 7,00 € je Pizza')
     expect(text(wrapper, '.breakdown__detail')[1]).toBe('4,20 € = 4,20 € je Pizza')
     expect(text(wrapper, '.breakdown__removed')).toEqual(['ohne Käse'])
