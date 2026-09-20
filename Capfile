@@ -5,7 +5,6 @@ install_plugin Capistrano::SCM::Git
 
 require "capistrano/rvm"
 require "capistrano/bundler"
-require "capistrano/rails/assets"
 require "capistrano/rails/migrations"
 
 # Order matters for `cap setup`: keys, then the certificate, then Puma (which can
