@@ -1,11 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
   <head>
-    <title><%= content_for(:title) || "Pizza Order" %></title>
+    <% title = content_for(:title) || "Pizza Order" %>
+    <% description = "Pizza aussuchen, Größe und Extras wählen, Code einlösen, bestellen — aus dem Steinofen, direkt auf den Bildschirm." %>
+    <title><%= title %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="application-name" content="Pizza Order">
+    <meta name="description" content="<%= description %>">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+
+    <%# link previews (WhatsApp, Slack, LinkedIn read Open Graph; X reads its own tags) %>
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Pizza Order">
+    <meta property="og:title" content="<%= title %>">
+    <meta property="og:description" content="<%= description %>">
+    <meta property="og:url" content="<%= request.base_url %>/">
+    <meta property="og:image" content="<%= request.base_url %>/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Eine gezeichnete Margherita neben dem Schriftzug Pizza Order">
+    <meta property="og:locale" content="de_DE">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<%= title %>">
+    <meta name="twitter:description" content="<%= description %>">
+    <meta name="twitter:image" content="<%= request.base_url %>/og.png">
 
     <%= yield :head %>
 
