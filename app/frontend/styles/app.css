@@ -242,7 +242,7 @@ html[data-theme="c64"] {
 
   --font: "C64 Pro Mono", var(--font-mono);
   --font-display: var(--font);
-  --prompt: "READY. ";
+  --prompt: "";   /* no room for READY. on a phone */
 
   color-scheme: dark;
 }
