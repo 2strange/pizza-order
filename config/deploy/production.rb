@@ -1,11 +1,6 @@
-# First deploy, in this order (the recipes' own sequence):
-#   cap production setup           # with nginx_use_ssl false and puma_hooks false
-#   cap production deploy
-#   cap production certbot:generate
-#   cap production puma:configure
-#   # then set nginx_use_ssl true, puma_hooks true and
-#   cap production deploy
-# Every deploy after that: cap production deploy
+# Two commands, nothing else:
+#   cap production setup    # once: keys, the Let's Encrypt certificate, the Puma service
+#   cap production deploy   # every time: code, bundle, Vite build, migrations, seed, nginx, restart
 hosts = SERVERS.fetch("production")
 
 server hosts.fetch("proxy_ip"), user: hosts.fetch("user"), roles: %w[proxy], no_release: true
