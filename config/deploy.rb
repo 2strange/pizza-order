@@ -7,7 +7,7 @@ lock "~> 3.20"
 SERVERS = YAML.safe_load(File.read(File.expand_path("deploy/servers.yml", __dir__)))
 
 set :application, "pizza_order"
-set :repo_url,    "git@github.com:2strange/pizza-order.git"
+set :repo_url,    "https://github.com/2strange/pizza-order.git"   # public repo, no deploy key needed
 set :branch,      "deploy"
 set :keep_releases, 3
 
