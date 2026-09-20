@@ -174,3 +174,7 @@ Format: **when (UTC) · decision · rejected alternative · why**.
   Why: the server sorts each code (`OrderBuilder`), refuses an unknown one or a
   second discount with a message the field shows at once, and the chips say what
   the code turned out to be. The domain did not change, only the doorway.
+- **12:10 · Link preview and language.** Open Graph and Twitter tags with an absolute
+  `og:image` (1200×630, the Margherita on the parchment), `lang="de"` (the UI is
+  German), the Margherita as favicon. Rejected: leaving it to the messenger's
+  fallback. Why: a link gets forwarded; the first thing anyone sees is the card.
