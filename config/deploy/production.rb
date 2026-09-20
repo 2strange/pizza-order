@@ -10,7 +10,7 @@ set :user,      hosts.fetch("user")
 set :deploy_to, "/home/#{fetch(:user)}/#{fetch(:application)}_#{fetch(:stage)}"
 set :rails_env, "production"
 
-set :puma_hooks,    false   # first setup + deploy; back to true afterwards
+set :puma_hooks,    true
 set :app_instances, 1
 
 set :nginx_upstream_host, hosts.fetch("upstream_host")
