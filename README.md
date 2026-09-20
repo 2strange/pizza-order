@@ -35,14 +35,22 @@ CI runs all three plus RuboCop and Brakeman on every push and pull request.
 
 ## Timeline
 
-Every step of this iteration is stamped by GitHub, not by hand:
+Every step is stamped by GitHub, not by hand. Times are UTC.
 
-| When (UTC) | What | Proof |
+| When | What | Proof |
 |---|---|---|
-| 2026-09-19 08:44 | Repository created | repo metadata |
-| 2026-09-19 08:45 | Kickoff | [#1](../../issues/1) |
-| _tbd_ | First green CI run | Actions |
-| _tbd_ | Done | release tag + last CI run |
+| 2026-09-19 08:44 | Repository created | repository metadata |
+| 2026-09-19 08:45 | Kickoff | [issue #1](../../issues/1) |
+| 2026-09-19 08:55 | First commit: scaffold with three-level tests; first CI run, red (the RSpec job had no Node for the Vite build) | [run](../../actions/runs/35433306081) |
+| 2026-09-19 09:11 | Domain model on `main`; first green CI run | [run](../../actions/runs/35434025871) |
+| 2026-09-19 09:30 | JSON API and ordering UI on `main` | [run](../../actions/runs/35434853784) |
+| 2026-09-19 13:44 – 15:10 | Pizzeria look: tokens, three themes, one cartoon pizza per menu item | commits |
+| 2026-09-20 07:19 | Readable names for promotions and discount codes; feature complete | [run](../../actions/runs/35496548369) |
+| 2026-09-20 | Release | [releases](../../releases) |
+
+Wall-clock, the app took one Saturday session and a short Sunday morning, including the
+waits for human review between steps. The [decision log](docs/decisions.md) carries the
+finer-grained times per decision.
 
 ## Decision log
 
