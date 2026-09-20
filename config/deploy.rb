@@ -16,6 +16,7 @@ append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "storage", "
 set :rvm_ruby_version, "3.4.2"
 set :rvm_custom_path,  "/usr/local/rvm"
 set :rvm_map_bins,     %w[gem rake ruby bundle rails]
+set :rvm_roles,        [ :app, :db, :web ]   # the proxy has no Ruby
 
 # Node for the Vite build (assets:precompile spawns `vite build`): pin the version
 # on the PATH instead of touching the server-wide nvm default.
