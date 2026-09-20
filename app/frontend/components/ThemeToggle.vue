@@ -2,8 +2,9 @@
 import { ref } from 'vue'
 
 // Three looks, one attribute: sets data-theme on <html> (the stylesheet swaps
-// the tokens), remembers the choice, and starts from the system preference
-// otherwise. Tapping "Nerd" while it is already on (or shift-clicking any
+// the tokens), remembers the choice, and starts with the tablecloth (light)
+// otherwise — the trattoria look is the product's face, not the OS's.
+// Tapping "Nerd" while it is already on (or shift-clicking any
 // option) turns on the Commodore easter egg; any option leads back out.
 const KEY = 'pizza-order.theme'
 
@@ -30,10 +31,9 @@ function remember(theme) {
   }
 }
 
-const preferred = () => (window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
 const known = (key) => THEMES.some((option) => option.key === key) || key === EASTER_EGG
-// a remembered theme that no longer exists falls back to the system preference
-const theme = ref(known(stored()) ? stored() : preferred())
+// a remembered theme that no longer exists falls back to light
+const theme = ref(known(stored()) ? stored() : 'light')
 
 function choose(key) {
   theme.value = key
