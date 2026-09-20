@@ -12,6 +12,7 @@ class Order < ApplicationRecord
   has_many :order_items, -> { order(:id) }, dependent: :destroy, autosave: true # autosave: item errors surface on the order
 
   validates :order_items, presence: true
+  validates :customer_name, presence: true, on: :place
   validate :promotion_codes_are_a_list, :codes_are_known
 
   def promotion_codes=(codes)
@@ -46,7 +47,7 @@ class Order < ApplicationRecord
 
     final = quote
     transaction do
-      save! # freezes the item prices first; the stamp below must not touch the items
+      save!(context: :place) # freezes the item prices first; the stamp below must not touch the items
       update!(placed_at: Time.current,
               adjustments: final.adjustments.map { |a| { label: a.label, code: a.code, kind: a.kind, amount_cents: a.amount_cents } },
               total_cents: final.total_cents)

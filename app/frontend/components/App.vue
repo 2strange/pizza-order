@@ -12,11 +12,14 @@ import ThemeToggle from './ThemeToggle.vue'
 // The one page: menu with an inline configurator, the cart below it, and the
 // confirmation once the order is placed.
 const menu = ref(null)
+const menuError = ref(null)
 const selected = ref(null)
 const cart = useCart()
 
 onMounted(async () => {
-  menu.value = (await api.menu()).data
+  const { ok, data } = await api.menu()
+  if (ok) menu.value = data
+  else menuError.value = data.errors?.[0] ?? 'Die Speisekarte konnte nicht geladen werden.'
 })
 
 function select(pizza) {
@@ -47,12 +50,13 @@ function add(item) {
     <template v-else-if="menu">
       <MenuBoard :pizzas="menu.pizzas" :selected-id="selected?.id ?? null" @select="select">
         <template #configurator>
-          <PizzaConfigurator :key="selected.id" :pizza="selected" :sizes="menu.sizes" :extras="menu.extras" @add="add" />
+          <PizzaConfigurator :key="selected.id" :pizza="selected" :sizes="menu.sizes" :extras="menu.extras" :max-quantity="menu.max_quantity" @add="add" />
         </template>
       </MenuBoard>
       <Cart :cart="cart" />
     </template>
 
+    <p v-else-if="menuError" class="app__hint" role="alert">{{ menuError }}</p>
     <p v-else class="app__hint">Speisekarte wird geladen …</p>
   </main>
 </template>

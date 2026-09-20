@@ -1,13 +1,16 @@
 <script setup>
-import { reactive } from 'vue'
+import { computed, reactive } from 'vue'
 import { formatCents } from '../money.js'
 
 // Size, extras, ingredients to leave out, quantity. Emits the item the way the
-// server wants it — ids and keys only, no prices.
+// server wants it — ids and keys only, no prices. The prices shown are the menu
+// prices scaled by the chosen size, exactly as the server will charge them;
+// the cart still trusts only the server's quote.
 const props = defineProps({
   pizza: { type: Object, required: true },
   sizes: { type: Array, required: true },
   extras: { type: Array, required: true },
+  maxQuantity: { type: Number, default: 50 },
 })
 const emit = defineEmits(['add'])
 
@@ -19,6 +22,9 @@ const form = reactive({
 })
 
 const multiplier = (size) => `×${String(size.multiplier).replace('.', ',')}`
+const chosen = computed(() => props.sizes.find((size) => size.key === form.size))
+// half up to whole cents, like Size#scale on the server
+const forSize = (cents, size = chosen.value) => Math.round(cents * Number(size.multiplier))
 
 function submit() {
   emit('add', {
@@ -38,7 +44,7 @@ function submit() {
       <label v-for="size in sizes" :key="size.key" class="choice">
         <input v-model="form.size" type="radio" name="size" :value="size.key" />
         <span class="choice__label">{{ size.label }}</span>
-        <span class="choice__note">{{ multiplier(size) }}</span>
+        <span class="choice__note">{{ formatCents(forSize(pizza.base_price_cents, size)) }} · {{ multiplier(size) }}</span>
       </label>
     </fieldset>
 
@@ -47,7 +53,7 @@ function submit() {
       <label v-for="extra in extras" :key="extra.id" class="choice">
         <input v-model="form.extraIds" type="checkbox" :value="extra.id" />
         <span class="choice__label">{{ extra.name }}</span>
-        <span class="choice__note">+ {{ formatCents(extra.extra_price_cents) }}</span>
+        <span class="choice__note">+ {{ formatCents(forSize(extra.extra_price_cents)) }}</span>
       </label>
     </fieldset>
 
@@ -62,7 +68,7 @@ function submit() {
     <div class="configurator__actions">
       <label class="configurator__quantity">
         <span>Menge</span>
-        <input v-model.number="form.quantity" type="number" min="1" step="1" required />
+        <input v-model.number="form.quantity" type="number" min="1" :max="maxQuantity" step="1" required />
       </label>
       <button type="submit" class="button button--primary">In den Warenkorb</button>
     </div>

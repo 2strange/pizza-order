@@ -6,7 +6,6 @@ import PriceBreakdown from './PriceBreakdown.vue'
 // The cart as the server prices it: the breakdown of the latest quote, the
 // codes, and the checkout form. All numbers come from `cart.state.quote`.
 const props = defineProps({ cart: { type: Object, required: true } })
-const emit = defineEmits(['placed'])
 
 const state = props.cart.state
 const customerName = ref('')
@@ -25,7 +24,7 @@ const applied = computed(() =>
 async function submit() {
   submitting.value = true
   try {
-    if (await props.cart.placeOrder(customerName.value)) emit('placed')
+    await props.cart.placeOrder(customerName.value) // App switches to the confirmation via cart.state.order
   } finally {
     submitting.value = false
   }

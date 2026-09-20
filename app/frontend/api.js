@@ -8,7 +8,8 @@ async function request(method, path, body) {
     headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'X-CSRF-Token': token },
     body: body === undefined ? undefined : JSON.stringify(body),
   })
-  return { ok: response.ok, status: response.status, data: await response.json() }
+  const data = await response.json().catch(() => ({ errors: [`Der Server hat mit ${response.status} geantwortet.`] }))
+  return { ok: response.ok, status: response.status, data }
 }
 
 export const api = {

@@ -8,7 +8,8 @@ class MenuController < ApiController
       extras: Ingredient.extras.order(:id).map do |extra|
         { id: extra.id, name: extra.name, extra_price_cents: extra.extra_price_cents }
       end,
-      sizes: Size.all.map { |size| { key: size.key, label: size.label, multiplier: size.multiplier.to_s } }
+      sizes: Size.all.map { |size| { key: size.key, label: size.label, multiplier: size.multiplier.to_s } },
+      max_quantity: OrderItem::MAX_QUANTITY
     }
   end
 end

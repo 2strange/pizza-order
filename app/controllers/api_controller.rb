@@ -4,6 +4,11 @@
 class ApiController < ApplicationController
   wrap_parameters false
 
+  # a wrongly shaped body (a string where a list belongs) is an error, not something to drop quietly
+  rescue_from ActionController::UnpermittedParameters do |error|
+    render_errors [ error.message ]
+  end
+
   rescue_from OrderBuilder::UnknownReference, OrderBuilder::CodeRejected do |error|
     render_errors [ error.message ]
   end
