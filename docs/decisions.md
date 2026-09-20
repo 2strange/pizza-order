@@ -154,3 +154,13 @@ Format: **when (UTC) · decision · rejected alternative · why**.
   with no job of its own; a soft variant earns its place beside a terminal look,
   not beside a pizzeria. A remembered `human` falls back to the system
   preference. The `c64` easter egg stays.
+
+## 2026-09-20
+
+- **07:15 · Promotions and discount codes carry a readable `name`; the receipt
+  shows it, the code travels alongside.** `Adjustment.label` is now the name,
+  `Adjustment.code` the code the customer typed; the JSON adjustment is
+  `{label, code, amount_cents}` and the frozen receipt stores both. Rejected:
+  deriving a name from the code in the seeds; keeping the code as the label. Why:
+  `ZWEIKLEINESALAMIFUEREINS` is what you type, not what a receipt should say, and a
+  name cannot be guessed from a code — `menu.json` requires it per code.
