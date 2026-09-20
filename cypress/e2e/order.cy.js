@@ -15,19 +15,21 @@ describe('ordering', () => {
     cy.get('.breakdown__line').should('have.length', 1).and('contain', 'Salami · Klein · 2×')
     cy.contains('.breakdown__sum--total', /8,40\s€/)
 
-    cy.contains('.code', 'Aktionscode').within(() => {
+    // one field for both kinds — the server sorts them and says so on the chip
+    cy.get('.code').within(() => {
       cy.get('input').type('ZWEIKLEINESALAMIFUEREINS')
       cy.contains('button', 'Einlösen').click()
+      cy.contains('.chip', 'ZWEIKLEINESALAMIFUEREINS').should('contain', 'Aktion')
     })
     cy.contains('.breakdown__sum--adjustment', '2 kleine Salami für 1').contains(/-4,20\s€/)
 
-    cy.contains('.code', 'Rabattcode').within(() => {
+    cy.get('.code').within(() => {
       cy.get('input').type('GIBTSNICHT')
       cy.contains('button', 'Einlösen').click()
       cy.get('.code__error').should('contain', 'GIBTSNICHT')
       cy.get('input').type('5PROZENTAUFALLES')
       cy.contains('button', 'Einlösen').click()
-      cy.get('.chip').should('contain', '5PROZENTAUFALLES')
+      cy.contains('.chip', '5PROZENTAUFALLES').should('contain', 'Rabatt')
     })
     cy.contains('.breakdown__sum--adjustment', '5 % auf alles').contains(/-0,21\s€/)
     cy.contains('.breakdown__sum--total', /3,99\s€/)

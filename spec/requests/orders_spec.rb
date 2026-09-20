@@ -16,10 +16,10 @@ RSpec.describe "Orders", type: :request do
     end
 
     it "does not place an order with an unknown code" do
-      expect { post_json "/orders", golden_body.merge(discount_code: "NOPE") }.not_to change(Order, :count)
+      expect { post_json "/orders", golden_body.merge(codes: [ "NOPE" ]) }.not_to change(Order, :count)
 
       expect(response).to have_http_status(:unprocessable_content)
-      expect(response.parsed_body).to eq("errors" => [ "Unknown discount code: NOPE" ])
+      expect(response.parsed_body).to eq("errors" => [ "Unknown code: NOPE" ])
     end
   end
 
@@ -35,8 +35,8 @@ RSpec.describe "Orders", type: :request do
 
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include("number" => format("#%04d", id), "customer_name" => "Mia")
-      expect(response.parsed_body["quote"]["adjustments"]).to eq [ { "label" => "2 kleine Salami für 1", "code" => "ZWEIKLEINESALAMIFUEREINS", "amount_cents" => -840 },
-                                                                  { "label" => "5 % auf alles", "code" => "5PROZENTAUFALLES", "amount_cents" => -86 } ]
+      expect(response.parsed_body["quote"]["adjustments"]).to eq [ { "label" => "2 kleine Salami für 1", "code" => "ZWEIKLEINESALAMIFUEREINS", "kind" => "promotion", "amount_cents" => -840 },
+                                                                  { "label" => "5 % auf alles", "code" => "5PROZENTAUFALLES", "kind" => "discount", "amount_cents" => -86 } ]
       expect(response.parsed_body["quote"]["total_cents"]).to eq 1629
     end
 

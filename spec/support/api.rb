@@ -20,7 +20,6 @@ RSpec.shared_context "api" do
     { items: [ item_body("Salami", "medium", extras: [ "Zwiebeln" ], without: [ "Käse" ]),
                item_body("Salami", "small", quantity: 3),
                item_body("Salami", "small", extras: [ "Oliven" ]) ],
-      promotion_codes: [ "ZWEIKLEINESALAMIFUEREINS" ],
-      discount_code: "5PROZENTAUFALLES" }
+      codes: [ "ZWEIKLEINESALAMIFUEREINS", "5PROZENTAUFALLES" ] }
   end
 end

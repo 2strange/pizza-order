@@ -10,8 +10,7 @@ const QUOTE_DELAY = 250
 export function useCart(api = defaultApi) {
   const state = reactive({
     items: [],
-    promotionCodes: [],
-    discountCode: '',
+    codes: [],
     quote: null,
     errors: [],
     pending: false,
@@ -22,7 +21,7 @@ export function useCart(api = defaultApi) {
   let sequence = 0
 
   function requestBody() {
-    return { items: state.items, promotion_codes: state.promotionCodes, discount_code: state.discountCode }
+    return { items: state.items, codes: state.codes }
   }
 
   async function refreshQuote() {
@@ -64,20 +63,16 @@ export function useCart(api = defaultApi) {
     scheduleQuote()
   }
 
-  async function addPromotionCode(code) {
-    state.promotionCodes.push(code)
-    if (!(await refreshQuote())) state.promotionCodes.pop()
+  // One field for both kinds: the server tells promotions and discounts apart
+  // and refuses what it does not know (or a second discount).
+  async function addCode(code) {
+    state.codes.push(code)
+    if (!(await refreshQuote())) state.codes.pop()
   }
 
-  function removePromotionCode(index) {
-    state.promotionCodes.splice(index, 1)
+  function removeCode(index) {
+    state.codes.splice(index, 1)
     return refreshQuote()
-  }
-
-  async function setDiscountCode(code) {
-    const previous = state.discountCode
-    state.discountCode = code
-    if (!(await refreshQuote())) state.discountCode = previous
   }
 
   async function placeOrder(customerName) {
@@ -89,8 +84,8 @@ export function useCart(api = defaultApi) {
 
   function reset() {
     clearTimeout(timer)
-    Object.assign(state, { items: [], promotionCodes: [], discountCode: '', quote: null, errors: [], pending: false, order: null })
+    Object.assign(state, { items: [], codes: [], quote: null, errors: [], pending: false, order: null })
   }
 
-  return { state, refreshQuote, addItem, removeItem, addPromotionCode, removePromotionCode, setDiscountCode, placeOrder, reset }
+  return { state, refreshQuote, addItem, removeItem, addCode, removeCode, placeOrder, reset }
 }

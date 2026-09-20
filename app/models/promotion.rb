@@ -25,7 +25,7 @@ class Promotion < ApplicationRecord
     in_deal = units.first(groups * from_quantity)
     free = in_deal.first(groups * (from_quantity - to_quantity))
 
-    Adjustment.new(label: name, code: code, amount_cents: -free.sum(&:base_price_cents), units: in_deal.tally)
+    Adjustment.new(label: name, code: code, kind: :promotion, amount_cents: -free.sum(&:base_price_cents), units: in_deal.tally)
   end
 
   def applies_to?(item)

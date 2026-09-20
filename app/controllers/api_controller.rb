@@ -4,7 +4,7 @@
 class ApiController < ApplicationController
   wrap_parameters false
 
-  rescue_from OrderBuilder::UnknownReference do |error|
+  rescue_from OrderBuilder::UnknownReference, OrderBuilder::CodeRejected do |error|
     render_errors [ error.message ]
   end
 
@@ -19,7 +19,7 @@ class ApiController < ApplicationController
   end
 
   def order_params
-    params.permit(:customer_name, :discount_code, promotion_codes: [],
+    params.permit(:customer_name, codes: [],
                   items: [ :pizza_id, :size, :quantity, { extra_ids: [], removed_ingredient_ids: [] } ])
   end
 

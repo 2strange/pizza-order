@@ -47,8 +47,8 @@ RSpec.describe Order do
     it "stamps the order and freezes the receipt" do
       expect(placed.placed_at).to be_present
       expect(placed.total_cents).to eq 399
-      expect(placed.adjustments).to eq [ { "label" => "2 kleine Salami für 1", "code" => "ZWEIKLEINESALAMIFUEREINS", "amount_cents" => -420 },
-                                         { "label" => "5 % auf alles", "code" => "5PROZENTAUFALLES", "amount_cents" => -21 } ]
+      expect(placed.adjustments).to eq [ { "label" => "2 kleine Salami für 1", "code" => "ZWEIKLEINESALAMIFUEREINS", "kind" => "promotion", "amount_cents" => -420 },
+                                         { "label" => "5 % auf alles", "code" => "5PROZENTAUFALLES", "kind" => "discount", "amount_cents" => -21 } ]
     end
 
     it "keeps the receipt when the discount changes" do
