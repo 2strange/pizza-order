@@ -3,7 +3,8 @@ import { ref } from 'vue'
 
 // Three looks, one attribute: sets data-theme on <html> (the stylesheet swaps
 // the tokens), remembers the choice, and starts from the system preference
-// otherwise. Shift-click any option for the Commodore easter egg.
+// otherwise. Tapping "Nerd" while it is already on (or shift-clicking any
+// option) turns on the Commodore easter egg; any option leads back out.
 const KEY = 'pizza-order.theme'
 
 const THEMES = [
@@ -40,6 +41,11 @@ function choose(key) {
   remember(key)
 }
 
+function pick(event, key) {
+  const again = key === 'nerd' && theme.value === 'nerd'
+  choose(event.shiftKey || again ? EASTER_EGG : key)
+}
+
 choose(theme.value)
 </script>
 
@@ -51,7 +57,7 @@ choose(theme.value)
       type="button"
       class="theme-toggle__option"
       :aria-pressed="theme === option.key"
-      @click="choose($event.shiftKey ? EASTER_EGG : option.key)"
+      @click="pick($event, option.key)"
     >
       <svg class="theme-toggle__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path :d="option.icon" /></svg>
       {{ option.label }}
