@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from 'vue'
 
-// One kind of code: what is applied (as removable chips), a field to add one,
-// and the server's verdict when a code was refused.
+// The codes: what is applied (as removable chips, each with the kind the server
+// recognised), a field to add one, and the server's verdict when one was refused.
 defineProps({
   label: { type: String, required: true },
   applied: { type: Array, default: () => [] },
@@ -19,9 +19,15 @@ function apply() {
   draft.value = ''
 }
 
-const CODE = /^Unknown (?:promotion|discount) code: (.+)$/
-// The model speaks English; the customer reads German.
-const friendly = (message) => (CODE.test(message) ? `Den Code „${message.match(CODE)[1]}“ kennen wir nicht.` : message)
+const UNKNOWN = /^Unknown code: (.+)$/
+const SECOND_DISCOUNT = /^Only one discount code per order: (.+)$/
+const KINDS = { promotion: 'Aktion', discount: 'Rabatt' }
+// The server speaks English; the customer reads German.
+function friendly(message) {
+  if (UNKNOWN.test(message)) return `Den Code „${message.match(UNKNOWN)[1]}“ kennen wir nicht.`
+  if (SECOND_DISCOUNT.test(message)) return `Nur ein Rabattcode pro Bestellung — „${message.match(SECOND_DISCOUNT)[1]}“ kam zu spät.`
+  return message
+}
 </script>
 
 <template>
@@ -34,7 +40,8 @@ const friendly = (message) => (CODE.test(message) ? `Den Code „${message.match
       <button type="submit" class="button">Einlösen</button>
     </form>
     <ul v-if="applied.length" class="code__applied">
-      <li v-for="(code, index) in applied" :key="index" class="chip">
+      <li v-for="({ code, kind }, index) in applied" :key="index" class="chip">
+        <span v-if="KINDS[kind]" class="chip__kind">{{ KINDS[kind] }}</span>
         {{ code }}
         <button type="button" class="chip__remove" :aria-label="`${code} entfernen`" @click="$emit('clear', index)">×</button>
       </li>

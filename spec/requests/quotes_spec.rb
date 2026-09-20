@@ -16,8 +16,8 @@ RSpec.describe "Quotes", type: :request do
         "base_price_cents" => 600, "extras_price_cents" => 100, "unit_price_cents" => 700, "line_price_cents" => 700
       )
       expect(quote["items"].map { |i| i["line_price_cents"] }).to eq [ 700, 1260, 595 ]
-      expect(quote["adjustments"]).to eq [ { "label" => "2 kleine Salami für 1", "code" => "ZWEIKLEINESALAMIFUEREINS", "amount_cents" => -840 },
-                                           { "label" => "5 % auf alles", "code" => "5PROZENTAUFALLES", "amount_cents" => -86 } ]
+      expect(quote["adjustments"]).to eq [ { "label" => "2 kleine Salami für 1", "code" => "ZWEIKLEINESALAMIFUEREINS", "kind" => "promotion", "amount_cents" => -840 },
+                                           { "label" => "5 % auf alles", "code" => "5PROZENTAUFALLES", "kind" => "discount", "amount_cents" => -86 } ]
       expect(quote["subtotal_cents"]).to eq 2555
       expect(quote["total_cents"]).to eq 1629
     end
@@ -26,11 +26,19 @@ RSpec.describe "Quotes", type: :request do
       expect { post_json "/quotes", golden_body }.not_to change(Order, :count)
     end
 
-    it "rejects an unknown code with the model's message" do
-      post_json "/quotes", golden_body.merge(promotion_codes: [ "GIBTSNICHT" ])
+    it "rejects an unknown code" do
+      post_json "/quotes", golden_body.merge(codes: [ "GIBTSNICHT" ])
 
       expect(response).to have_http_status(:unprocessable_content)
-      expect(response.parsed_body).to eq("errors" => [ "Unknown promotion code: GIBTSNICHT" ])
+      expect(response.parsed_body).to eq("errors" => [ "Unknown code: GIBTSNICHT" ])
+    end
+
+    it "accepts one discount code only" do
+      DiscountCode.create!(code: "ZEHN", name: "10 % auf alles", percent: 10)
+      post_json "/quotes", golden_body.merge(codes: [ "5PROZENTAUFALLES", "ZEHN" ])
+
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(response.parsed_body).to eq("errors" => [ "Only one discount code per order: ZEHN" ])
     end
 
     it "rejects an invalid item" do

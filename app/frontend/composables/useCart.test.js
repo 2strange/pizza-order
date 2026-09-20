@@ -18,13 +18,12 @@ describe('useCart', () => {
 
     cart.addItem(salami)
     await vi.runAllTimersAsync()
-    await cart.addPromotionCode('ZWEIKLEINESALAMIFUEREINS')
-    await cart.setDiscountCode('5PROZENTAUFALLES')
+    await cart.addCode('ZWEIKLEINESALAMIFUEREINS')
+    await cart.addCode('5PROZENTAUFALLES')
 
     expect(api.quote).toHaveBeenLastCalledWith({
       items: [salami],
-      promotion_codes: ['ZWEIKLEINESALAMIFUEREINS'],
-      discount_code: '5PROZENTAUFALLES',
+      codes: ['ZWEIKLEINESALAMIFUEREINS', '5PROZENTAUFALLES'],
     })
     expect(cart.state.quote).toEqual(quoted)
     expect(cart.state.errors).toEqual([])
@@ -58,14 +57,14 @@ describe('useCart', () => {
 
   it('drops a code the server refuses and keeps the message', async () => {
     const api = fakeApi()
-    api.quote.mockResolvedValueOnce({ ok: false, data: { errors: ['Unknown promotion code: NOPE'] } })
+    api.quote.mockResolvedValueOnce({ ok: false, data: { errors: ['Unknown code: NOPE'] } })
     const cart = useCart(api)
     cart.state.items.push(salami)
 
-    await cart.addPromotionCode('NOPE')
+    await cart.addCode('NOPE')
 
-    expect(cart.state.promotionCodes).toEqual([])
-    expect(cart.state.errors).toEqual(['Unknown promotion code: NOPE'])
+    expect(cart.state.codes).toEqual([])
+    expect(cart.state.errors).toEqual(['Unknown code: NOPE'])
   })
 
   it('places the order with the customer name and keeps the answer', async () => {
@@ -77,7 +76,7 @@ describe('useCart', () => {
 
     expect(await cart.placeOrder('Mia')).toBe(true)
 
-    expect(api.placeOrder).toHaveBeenCalledWith({ items: [salami], promotion_codes: [], discount_code: '', customer_name: 'Mia' })
+    expect(api.placeOrder).toHaveBeenCalledWith({ items: [salami], codes: [], customer_name: 'Mia' })
     expect(cart.state.order).toEqual(placed)
   })
 })

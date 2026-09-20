@@ -12,10 +12,15 @@ const state = props.cart.state
 const customerName = ref('')
 const submitting = ref(false)
 
-const errorsAbout = (kind) => computed(() => state.errors.filter((error) => error.startsWith(`Unknown ${kind} code`)))
-const promotionErrors = errorsAbout('promotion')
-const discountErrors = errorsAbout('discount')
-const otherErrors = computed(() => state.errors.filter((error) => !error.startsWith('Unknown')))
+const aboutCodes = (error) => error.startsWith('Unknown code') || error.startsWith('Only one discount code')
+const codeErrors = computed(() => state.errors.filter(aboutCodes))
+const otherErrors = computed(() => state.errors.filter((error) => !aboutCodes(error)))
+
+// The chips show what the server made of each code: the kind comes back with
+// the quote's adjustments (a valid promotion that matches nothing has none).
+const applied = computed(() =>
+  state.codes.map((code) => ({ code, kind: state.quote?.adjustments.find((a) => a.code === code)?.kind })),
+)
 
 async function submit() {
   submitting.value = true
@@ -38,14 +43,7 @@ async function submit() {
       <p v-else class="cart__empty">Preis wird berechnet …</p>
 
       <div class="cart__codes">
-        <CodeField label="Aktionscode" :applied="state.promotionCodes" :errors="promotionErrors" @apply="cart.addPromotionCode" @clear="cart.removePromotionCode" />
-        <CodeField
-          label="Rabattcode"
-          :applied="state.discountCode ? [state.discountCode] : []"
-          :errors="discountErrors"
-          @apply="cart.setDiscountCode"
-          @clear="cart.setDiscountCode('')"
-        />
+        <CodeField label="Aktions- oder Rabattcode" :applied="applied" :errors="codeErrors" @apply="cart.addCode" @clear="cart.removeCode" />
       </div>
 
       <form class="cart__checkout" @submit.prevent="submit">
