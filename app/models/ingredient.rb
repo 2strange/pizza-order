@@ -1,6 +1,8 @@
 # An ingredient is either part of a recipe only (no extra price) or can also be
 # added to any pizza as a paid extra.
 class Ingredient < ApplicationRecord
+  has_and_belongs_to_many :pizzas
+
   validates :name, presence: true, uniqueness: true
   validates :extra_price_cents, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
 

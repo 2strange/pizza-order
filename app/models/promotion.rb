@@ -4,8 +4,10 @@ class Promotion < ApplicationRecord
   belongs_to :pizza
 
   attribute :size, Size::Type.new
+  normalizes :code, with: ->(code) { code.strip.upcase }
 
   validates :code, presence: true, uniqueness: true
+  validate { errors.add(:code, "is already a discount code") if DiscountCode.exists?(code: code) }
   validates :name, presence: true
   validates :size, presence: { message: "is not a known size" }
   validates :from_quantity, numericality: { only_integer: true, greater_than: 1 }

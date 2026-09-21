@@ -36,6 +36,18 @@ RSpec.describe "Orders", type: :request do
       expect(response.parsed_body["errors"].first).to include("codes")
     end
 
+    it "lets one address place ten orders a minute, then asks it to wait" do
+      Rails.cache.clear
+      10.times { post_json "/orders", golden_body.merge(customer_name: "Mia") }
+      expect(response).to have_http_status(:created)
+
+      expect { post_json "/orders", golden_body.merge(customer_name: "Mia") }.not_to change(Order, :count)
+      expect(response).to have_http_status(:too_many_requests)
+      expect(response.parsed_body).to eq("errors" => [ "Too many orders from this address, try again in a minute" ])
+    ensure
+      Rails.cache.clear
+    end
+
     it "keeps the receipt as it was placed, whatever the menu does later" do
       post_json "/orders", golden_body.merge(customer_name: "Mia")
       order = Order.find(response.parsed_body["id"])

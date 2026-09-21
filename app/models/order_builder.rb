@@ -1,8 +1,9 @@
 # Turns the body of a quote or order request — menu ids, sizes, quantities and
 # codes, nothing priced — into an Order with its items. Ids that point nowhere
-# raise UnknownReference; codes are sorted into promotions and the one discount
-# (the customer has "a code", the domain has two kinds — telling them apart is
-# the server's job), and a code that is neither, or a second discount, raises
+# raise UnknownReference; codes are trimmed and upcased (a code is what it says,
+# however it was typed) and sorted into promotions and the one discount (the
+# customer has "a code", the domain has two kinds — telling them apart is the
+# server's job), and a code that is neither, or a second discount, raises
 # CodeRejected. Whether the assembled order is valid is the order's own business.
 class OrderBuilder
   UnknownReference = Class.new(ArgumentError)
@@ -27,7 +28,7 @@ class OrderBuilder
   def sort_codes(codes)
     promotions = []
     discount = nil
-    codes.map(&:to_s).each do |code|
+    codes.map { |code| code.to_s.strip.upcase }.each do |code|
       if Promotion.exists?(code: code)
         promotions << code
       elsif DiscountCode.exists?(code: code)
