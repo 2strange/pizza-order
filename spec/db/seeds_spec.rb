@@ -1,10 +1,15 @@
 require "rails_helper"
 
 RSpec.describe "Seeds" do
+  # The database may already carry the menu (db:prepare seeds a fresh one, and
+  # CI starts fresh), so what counts is the state after loading, not the change.
   it "load the menu and are idempotent" do
-    expect { Rails.application.load_seed }.to change(Pizza, :count).from(0).to(6)
-      .and change(Promotion, :count).to(1)
-      .and change(DiscountCode, :count).to(1)
+    Rails.application.load_seed
+
+    expect(Pizza.pluck(:name)).to contain_exactly("Margherita", "Salami", "Funghi", "Prosciutto", "Tonno", "Quattro Formaggi")
+    expect(Ingredient.extras.pluck(:name)).to contain_exactly("Zwiebeln", "Käse", "Oliven")
+    expect(Promotion.pluck(:code)).to eq [ "ZWEIKLEINESALAMIFUEREINS" ]
+    expect(DiscountCode.pluck(:code)).to eq [ "5PROZENTAUFALLES" ]
 
     expect { Rails.application.load_seed }.not_to change { [ Pizza.count, Ingredient.count, Promotion.count, DiscountCode.count ] }
   end
