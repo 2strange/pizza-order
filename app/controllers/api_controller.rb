@@ -28,7 +28,7 @@ class ApiController < ApplicationController
                   items: [ :pizza_id, :size, :quantity, { extra_ids: [], removed_ingredient_ids: [] } ])
   end
 
-  def render_errors(messages)
-    render json: { errors: messages }, status: :unprocessable_content
+  def render_errors(messages, status: :unprocessable_content)
+    render json: { errors: messages }, status: status
   end
 end

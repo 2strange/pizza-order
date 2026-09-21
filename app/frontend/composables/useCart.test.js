@@ -81,7 +81,7 @@ describe('useCart', () => {
   })
 
   it('marks the quote stale the moment an item changes, before the server answers', () => {
-    const cart = useCart(api)
+    const cart = useCart(fakeApi())
     cart.addItem(salami)
     expect(cart.state.pending).toBe(true)
   })

@@ -13,7 +13,7 @@ const emit = defineEmits(['apply', 'clear'])
 const draft = ref('')
 
 function apply() {
-  const code = draft.value.trim()
+  const code = draft.value.trim().toUpperCase()
   if (!code) return
   emit('apply', code)
   draft.value = ''

@@ -26,6 +26,14 @@ RSpec.describe "Quotes", type: :request do
       expect { post_json "/quotes", golden_body }.not_to change(Order, :count)
     end
 
+    it "takes a code however it was typed and answers with the code as it is" do
+      post_json "/quotes", golden_body.merge(codes: [ " zweikleinesalamifuereins", "5prozentaufalles " ])
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body["adjustments"].map { |a| a["code"] }).to eq [ "ZWEIKLEINESALAMIFUEREINS", "5PROZENTAUFALLES" ]
+      expect(response.parsed_body["total_cents"]).to eq 1629
+    end
+
     it "rejects an unknown code" do
       post_json "/quotes", golden_body.merge(codes: [ "GIBTSNICHT" ])
 

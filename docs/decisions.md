@@ -196,3 +196,41 @@ Format: **when (UTC) · decision · rejected alternative · why**.
   (`on: :place`), quotes carry none. A body with the wrong shape is refused with 422 instead
   of having keys dropped. The Rails generator leftovers (PWA, mailer, job skeletons,
   `allow_browser`) are removed; `bin/dev` now does what the README says.
+
+## 2026-09-21
+
+- **08:51 · Third review round (Claude Fable 5.1), read-only against `main`, then the
+  findings applied in one branch.** The domain was found sound; what follows is the tuning.
+- **08:55 · Codes are case-insensitive: trimmed and upcased at the door (`OrderBuilder`) and
+  `normalizes :code` on both code models.** Rejected: leaving it to the customer to type
+  `ZWEIKLEINESALAMIFUEREINS` in capitals; matching case-insensitively in the query. Why: a
+  code is what it says, however it was typed, and a canonical spelling lets the order
+  store, the receipt show and the chip echo the same string. The field upcases as well, so
+  the chip never disagrees with the receipt.
+- **08:55 · A code is unique across both kinds.** Each model refuses a code the other
+  already has. Rejected: one `codes` table with a type column. Why: the builder decides the
+  kind by which table knows the code; the same code in both would have made a promotion win
+  silently. Two validations close that, a table merge would not have paid for itself.
+- **08:58 · `Order#promotions` and `#discount` look their records up once.** Rejected: leaving
+  the lookups as they were. Why: the validation and the pricing both ask; with nine queries
+  for a quote of one line and two codes, every code was fetched three times. The memo is
+  reset when the codes are assigned and on `reload`.
+- **09:00 · The domain's invariants are CHECK constraints as well:** positive prices, the
+  quantity range, the percent range, `to < from` on a promotion. Rejected: trusting the
+  validations alone; NOT NULL on the receipt columns. Why: SQLite and Rails support CHECK,
+  and a row that no model would accept should not exist however it got there. NOT NULL on
+  `placed_at`, `total_cents`, `adjustments` was tried and rejected: `place!` has to save in
+  two steps (the items turn read-only the moment the order row carries `placed_at`), so the
+  columns are empty for one statement. It stays a model invariant, documented on `place!`.
+- **09:02 · `POST /orders` is rate-limited, ten per address and minute, with a 429 and a
+  message in the JSON shape the client knows.** Rejected: no limit. Why: a public page with
+  no login and sequential order numbers; the test environment now caches in memory so the
+  limiter can be tested.
+- **09:05 · Unit specs for `Promotion`, `DiscountCode`, `OrderBuilder`, the seeds and the
+  constraints; a second Cypress flow (remove a line, remove a code).** Rejected: relying on
+  the request specs, which covered all of it indirectly. Why: the models are the point of
+  the project and should state their rules themselves; the seeds' drift guard and
+  idempotence were untested; the browser only knew the happy path.
+- **09:05 · The last Vitest spec on `main` referenced an undefined `api` and failed locally
+  on both worktrees; it now builds its fake like the others.** Kept as a note: the merge
+  went through on a green badge that did not cover it.

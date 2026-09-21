@@ -41,4 +41,37 @@ describe('ordering', () => {
     cy.get('.confirmation__number').invoke('text').should('match', /^#\d{4,}$/)
     cy.get('.confirmation .breakdown__sum--total').contains(/3,99\s€/)
   })
+
+  // Taking things back out: a line and a code leave the cart, the total follows.
+  it('lets the customer remove a pizza and a code again', () => {
+    cy.visit('/')
+
+    cy.contains('.pizza', 'Salami').click()
+    cy.get('.configurator').within(() => {
+      cy.contains('label', 'Klein').click()
+      cy.get('input[type="number"]').clear().type('2')
+      cy.contains('button', 'In den Warenkorb').click()
+    })
+    cy.contains('.pizza', 'Margherita').click()
+    cy.get('.configurator').within(() => cy.contains('button', 'In den Warenkorb').click())
+    cy.get('.breakdown__line').should('have.length', 2)
+    cy.contains('.breakdown__sum--total', /13,40\s€/) // 8,40 + 5,00
+
+    cy.contains('.breakdown__line', 'Margherita').find('.breakdown__remove').click()
+    cy.get('.breakdown__line').should('have.length', 1)
+    cy.contains('.breakdown__sum--total', /8,40\s€/)
+
+    // typed in lower case: the chip and the receipt show the code as the server knows it
+    cy.get('.code').within(() => {
+      cy.get('input').type('zweikleinesalamifuereins')
+      cy.contains('button', 'Einlösen').click()
+      cy.contains('.chip', 'ZWEIKLEINESALAMIFUEREINS').should('contain', 'Aktion')
+    })
+    cy.contains('.breakdown__sum--total', /4,20\s€/)
+
+    cy.get('.chip__remove').click()
+    cy.get('.chip').should('not.exist')
+    cy.get('.breakdown__sum--adjustment').should('not.exist')
+    cy.contains('.breakdown__sum--total', /8,40\s€/)
+  })
 })

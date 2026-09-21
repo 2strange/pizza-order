@@ -52,6 +52,7 @@ Every step is stamped by GitHub, not by hand. Times are UTC.
 | 2026-09-20 07:19 | Readable names for promotions and discount codes; feature complete | [run](../../actions/runs/35496548369) |
 | 2026-09-20 10:16 | Deployed to [pizza.trendgegner.com](https://pizza.trendgegner.com) (Capistrano, on the `deploy` branch) | live |
 | 2026-09-20 | Release | [releases](../../releases) |
+| 2026-09-21 09:05 | Final tuning after a Claude Fable 5.1 review: case-insensitive codes, CHECK constraints, rate limit, unit specs for every model | commits |
 
 Wall-clock, the app took one Saturday session and a short Sunday morning, including the
 waits for human review between steps. The [decision log](docs/decisions.md) carries the

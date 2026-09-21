@@ -16,7 +16,18 @@ class Order < ApplicationRecord
   validate :promotion_codes_are_a_list, :codes_are_known
 
   def promotion_codes=(codes)
+    @promotions = nil
     super(codes.nil? ? [] : codes)
+  end
+
+  def discount_code=(code)
+    @discount = nil
+    super
+  end
+
+  def reload(...)
+    @promotions = @discount = nil
+    super
   end
 
   # Pricing order: line prices → promotions, in the order the codes were given,
@@ -60,8 +71,10 @@ class Order < ApplicationRecord
     super || placed_at_in_database.present?
   end
 
+  # The records behind the codes, looked up once per order: validation and
+  # pricing both ask, and an order's codes do not change between the two.
   def promotions
-    promotion_codes.map do |code|
+    @promotions ||= promotion_codes.map do |code|
       Promotion.find_by(code: code) or raise UnknownCode, "Unknown promotion code: #{code}"
     end
   end
@@ -69,7 +82,7 @@ class Order < ApplicationRecord
   def discount
     return if discount_code.blank?
 
-    DiscountCode.find_by(code: discount_code) or raise UnknownCode, "Unknown discount code: #{discount_code}"
+    @discount ||= DiscountCode.find_by(code: discount_code) or raise UnknownCode, "Unknown discount code: #{discount_code}"
   end
 
   private

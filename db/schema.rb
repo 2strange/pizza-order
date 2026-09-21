@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_20_070000) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_21_085500) do
   create_table "discount_codes", force: :cascade do |t|
     t.string "code", null: false
     t.datetime "created_at", null: false
@@ -18,6 +18,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_20_070000) do
     t.integer "percent", null: false
     t.datetime "updated_at", null: false
     t.index ["code"], name: "index_discount_codes_on_code", unique: true
+    t.check_constraint "percent BETWEEN 1 AND 100", name: "discount_codes_percent_in_range"
   end
 
   create_table "ingredients", force: :cascade do |t|
@@ -26,6 +27,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_20_070000) do
     t.string "name", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_ingredients_on_name", unique: true
+    t.check_constraint "extra_price_cents IS NULL OR extra_price_cents > 0", name: "ingredients_extra_price_positive"
   end
 
   create_table "ingredients_pizzas", id: false, force: :cascade do |t|
@@ -57,6 +59,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_20_070000) do
     t.datetime "updated_at", null: false
     t.index ["order_id"], name: "index_order_items_on_order_id"
     t.index ["pizza_id"], name: "index_order_items_on_pizza_id"
+    t.check_constraint "base_price_cents >= 0 AND extras_price_cents >= 0", name: "order_items_prices_not_negative"
+    t.check_constraint "quantity BETWEEN 1 AND 50", name: "order_items_quantity_in_range"
   end
 
   create_table "orders", force: :cascade do |t|
@@ -76,6 +80,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_20_070000) do
     t.string "name", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_pizzas_on_name", unique: true
+    t.check_constraint "base_price_cents > 0", name: "pizzas_base_price_positive"
   end
 
   create_table "promotions", force: :cascade do |t|
@@ -89,6 +94,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_20_070000) do
     t.datetime "updated_at", null: false
     t.index ["code"], name: "index_promotions_on_code", unique: true
     t.index ["pizza_id"], name: "index_promotions_on_pizza_id"
+    t.check_constraint "from_quantity > 1 AND to_quantity >= 0 AND to_quantity < from_quantity", name: "promotions_quantities_consistent"
   end
 
   add_foreign_key "ingredients_pizzas", "ingredients"

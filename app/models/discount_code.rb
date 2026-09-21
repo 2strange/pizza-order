@@ -1,6 +1,9 @@
 # A percentage off the whole order, taken after promotions.
 class DiscountCode < ApplicationRecord
+  normalizes :code, with: ->(code) { code.strip.upcase }
+
   validates :code, presence: true, uniqueness: true
+  validate { errors.add(:code, "is already a promotion code") if Promotion.exists?(code: code) }
   validates :name, presence: true
   validates :percent, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 100 }
 
